@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import * as htmlToImage from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import { motion, useDragControls } from 'framer-motion';
+import { processSVGTemplate } from './svgUtils';
 
 // Componente de texto arrastrable e interactivo (Ahora con Animaciones)
 const DraggableText = ({ tag: Tag = 'div', className, defaultText, style, constraintsRef, delay = 0 }) => {
@@ -164,7 +165,7 @@ const DraggableSVG = ({ id, svgType, color, className, constraintsRef, onDelete,
   );
 };
 
-const Editor = () => {
+const Editor = ({ customTemplates = [], setCustomTemplates }) => {
   const [activeTemplate, setActiveTemplate] = useState('botanical');
   const [backgroundImage, setBackgroundImage] = useState(null);
   
@@ -207,7 +208,31 @@ const Editor = () => {
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const frameInputRef = useRef(null);
+  const canvaInputRef = useRef(null);
   const [frameInputType, setFrameInputType] = useState(null);
+
+  const handleCanvaUpload = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === 'image/svg+xml') {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const svgContent = event.target.result;
+        const processedSvg = processSVGTemplate(svgContent);
+        if (processedSvg) {
+          const newTemplate = { id: Date.now(), svg: processedSvg };
+          if (setCustomTemplates) {
+            setCustomTemplates([...customTemplates, newTemplate]);
+          }
+          setActiveTemplate(`custom-${newTemplate.id}`);
+          setAddedElements([]); // Limpiar elementos para la nueva plantilla
+        }
+      };
+      reader.readAsText(file);
+    } else {
+      alert('Por favor sube un archivo SVG válido descargado de Canva.');
+    }
+    e.target.value = null;
+  };
 
   // Generador Mágico de Textos
   const applyMagicText = (style) => {
@@ -526,6 +551,16 @@ const Editor = () => {
                  <span className="font-sans font-light text-white text-[10px] uppercase relative z-10" style={{ textShadow: `0 2px 4px ${themeColors.primaryText}` }}>Fotográfico</span>
               </div>
             </div>
+            </div>
+
+            {/* Botón Importar Canva (SVG) */}
+            <div className="col-span-2 mt-2">
+              <input type="file" accept=".svg" ref={canvaInputRef} onChange={handleCanvaUpload} className="hidden" />
+              <button onClick={() => canvaInputRef.current.click()} className="w-full bg-gradient-to-r from-[#00C4CC] to-[#7D2AE8] text-white rounded-xl p-3 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-md">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                <span className="font-bold text-xs uppercase tracking-wide">Importar de Canva (SVG)</span>
+              </button>
+            </div>
           </div>
 
           {activeTemplate === 'photographic' && (
@@ -746,6 +781,33 @@ const Editor = () => {
               </div>
             </motion.div>
           )}
+
+          {/* PLANTILLA CUSTOM DE CANVA (SVG) */}
+          {activeTemplate.startsWith('custom-') && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden"
+              style={{
+                '--color-base': themeColors.background,
+                '--color-accent': themeColors.accent,
+                '--color-primary-text': themeColors.primaryText,
+                '--color-secondary-text': themeColors.secondaryText
+              }}
+            >
+              {/* Render del SVG Procesado */}
+              <div 
+                className="w-full h-full absolute inset-0 pointer-events-none z-0 flex items-center justify-center"
+                dangerouslySetInnerHTML={{ __html: customTemplates.find(t => `custom-${t.id}` === activeTemplate)?.svg || '' }}
+              ></div>
+              
+              {/* Textos por defecto encima */}
+              <div className="relative z-20 w-full h-full flex flex-col items-center justify-center p-8 gap-4">
+                 <DraggableText delay={0.4} tag="h1" constraintsRef={canvasRef} defaultText={texts.names} className="text-5xl font-serif text-center w-full" style={{ fontFamily: fontFamily, color: themeColors.primaryText }} />
+                 <DraggableText delay={0.6} tag="p" constraintsRef={canvasRef} defaultText={texts.date} className="text-sm tracking-widest uppercase mt-4 font-sans w-full text-center font-bold" style={{ color: themeColors.primaryText }} />
+              </div>
+            </motion.div>
+          )}
+
           {/* 4. BOHO - Arco */}
           {activeTemplate === 'boho' && (
             <motion.div 

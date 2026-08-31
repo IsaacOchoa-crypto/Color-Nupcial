@@ -122,7 +122,10 @@ const PaletteCard = ({ palette, onCopy, invitationDetails, globalViewMode }) => 
   const [tiltStyle, setTiltStyle] = useState({});
   const [glareStyle, setGlareStyle] = useState({ opacity: 0 });
   const [activeTemplateIndex, setActiveTemplateIndex] = useState(0);
-  const templates = ['classic', 'botanical', 'minimalist', 'boho', 'avant-garde', 'photographic'];
+  const templates = [
+    'classic', 'botanical', 'minimalist', 'boho', 'avant-garde', 'photographic',
+    ...(palette.customTemplates || []).map(t => `custom-${t.id}`)
+  ];
   
   const [base, secondary, accent] = palette.colores;
 
@@ -292,6 +295,19 @@ const PaletteCard = ({ palette, onCopy, invitationDetails, globalViewMode }) => 
           </div>
         );
       default:
+        // Render custom templates
+        if (activeTemplate && activeTemplate.startsWith('custom-')) {
+          const customId = parseInt(activeTemplate.replace('custom-', ''));
+          const customT = (palette.customTemplates || []).find(t => t.id === customId);
+          if (customT) {
+            return (
+              <div className="flex-grow flex flex-col items-center justify-center relative z-0 overflow-hidden w-full h-full"
+                   style={{ '--color-base': base, '--color-accent': accent, '--color-primary-text': secondary }}
+                   dangerouslySetInnerHTML={{ __html: customT.svg }}
+              ></div>
+            );
+          }
+        }
         return null;
     }
   };
@@ -430,6 +446,7 @@ function App() {
   // Generador de Paleta (IA)
   const [customColors, setCustomColors] = useState(['#8B5A2B']);
   const [generatedPalettes, setGeneratedPalettes] = useState([]);
+  const [customTemplates, setCustomTemplates] = useState([]); // Array de SVGs de Canva
   const isAddingColorRef = useRef(false);
 
   const handleCopy = (color) => {
@@ -652,7 +669,7 @@ function App() {
               {generatedPalettes.map((palette, index) => (
                 <PaletteCard 
                   key={`gen-${index}`} 
-                  palette={palette} 
+                  palette={{...palette, customTemplates}} 
                   onCopy={handleCopy} 
                   invitationDetails={invitationDetails}
                   globalViewMode={globalViewMode} 
@@ -689,7 +706,7 @@ function App() {
           {filteredPalettes.map((palette, index) => (
             <PaletteCard 
               key={palette.nombre} 
-              palette={palette} 
+              palette={{...palette, customTemplates}} 
               onCopy={handleCopy} 
               invitationDetails={invitationDetails}
               globalViewMode={globalViewMode}
@@ -708,7 +725,7 @@ function App() {
         </footer>
         </div>
       ) : (
-        <Editor />
+        <Editor customTemplates={customTemplates} setCustomTemplates={setCustomTemplates} />
       )}
 
       {/* Toast de notificaciones Global */}
