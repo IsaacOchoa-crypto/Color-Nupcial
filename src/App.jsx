@@ -121,8 +121,20 @@ const PaletteCard = ({ palette, onCopy, invitationDetails, globalViewMode }) => 
   const cardRef = useRef(null);
   const [tiltStyle, setTiltStyle] = useState({});
   const [glareStyle, setGlareStyle] = useState({ opacity: 0 });
+  const [activeTemplateIndex, setActiveTemplateIndex] = useState(0);
+  const templates = ['classic', 'botanical', 'minimalist', 'boho', 'avant-garde', 'photographic'];
   
   const [base, secondary, accent] = palette.colores;
+
+  const handlePrevTemplate = (e) => {
+    e.stopPropagation();
+    setActiveTemplateIndex((prev) => (prev > 0 ? prev - 1 : templates.length - 1));
+  };
+
+  const handleNextTemplate = (e) => {
+    e.stopPropagation();
+    setActiveTemplateIndex((prev) => (prev < templates.length - 1 ? prev + 1 : 0));
+  };
 
   useEffect(() => {
     toggleFlip(globalViewMode === 'invitations');
@@ -183,6 +195,104 @@ const PaletteCard = ({ palette, onCopy, invitationDetails, globalViewMode }) => 
         transform: `rotateY(180deg) rotateX(0deg) rotateY(0deg)`,
         transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
       });
+    }
+  };
+
+  const renderTemplate = () => {
+    const activeTemplate = templates[activeTemplateIndex];
+    switch (activeTemplate) {
+      case 'classic':
+        return (
+          <div className="flex-grow flex flex-col items-center justify-center p-8 relative z-0 bg-transparent">
+            <div className="absolute inset-4 border opacity-80" style={{ borderColor: accent }}></div>
+            <div className="absolute inset-5 border opacity-40" style={{ borderColor: accent }}></div>
+            <div className="text-center px-4 w-full">
+              <span className="block text-2xl mb-4 font-serif" style={{ color: accent }}>I & E</span>
+              <span className="block text-[8px] tracking-[0.2em] uppercase mb-2 font-sans" style={{ color: secondary }}>Tienen el honor de invitarle</span>
+              <div className="text-3xl leading-tight mb-2 font-serif text-balance" style={{ color: secondary, textShadow: `0px 1px 2px ${accent}33` }}>
+                {invitationDetails.names}
+              </div>
+              <p className="text-[9px] uppercase mt-2 font-sans" style={{ color: secondary }}>{invitationDetails.date}</p>
+              <p className="text-[10px] italic font-serif" style={{ color: secondary, opacity: 0.8 }}>{invitationDetails.bottomMessage}</p>
+            </div>
+          </div>
+        );
+      case 'botanical':
+        return (
+          <div className="flex-grow flex flex-col items-center justify-center p-6 relative z-0 bg-transparent">
+            <div className="absolute inset-4 border border-dashed rounded-sm opacity-60" style={{ borderColor: accent }}></div>
+            <div className="text-center w-full z-10">
+              <span className="block text-[8px] tracking-[0.2em] uppercase mb-4 font-sans" style={{ color: secondary }}>Nos complace invitarte a celebrar</span>
+              <div className="text-4xl leading-tight mb-4 font-serif text-balance" style={{ color: secondary }}>
+                {invitationDetails.names}
+              </div>
+              <p className="text-[10px] tracking-widest uppercase mb-1 font-sans font-medium" style={{ color: secondary }}>{invitationDetails.date}</p>
+              <p className="text-[9px] italic font-serif mb-6" style={{ color: secondary, opacity: 0.8 }}>{invitationDetails.bottomMessage}</p>
+              <p className="text-[9px] font-sans" style={{ color: secondary }}>Recepción a las 20:00 hrs</p>
+            </div>
+          </div>
+        );
+      case 'minimalist':
+        return (
+          <div className="flex-grow flex flex-col items-center justify-center p-6 relative z-0 bg-transparent">
+            <svg className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] pointer-events-none z-0" preserveAspectRatio="none" viewBox="0 0 100 100" fill="none">
+              <rect x="0" y="0" width="100" height="100" stroke={accent} strokeWidth="0.5" opacity="0.8" />
+              <rect x="2" y="2" width="96" height="96" stroke={accent} strokeWidth="0.2" opacity="0.6" />
+            </svg>
+            <div className="text-center w-full z-10 p-2">
+              <span className="block text-[7px] tracking-[0.3em] uppercase mb-8 font-sans font-light" style={{ color: secondary }}>CELEBRAMOS NUESTRO AMOR</span>
+              <div className="text-3xl font-sans font-light tracking-widest mb-2" style={{ color: secondary }}>{invitationDetails.names.split('&')[0]?.trim() || "Ana"}</div>
+              <span className="text-xl font-serif italic" style={{ color: accent }}>&</span>
+              <div className="text-3xl font-sans font-light tracking-widest mt-2 mb-8" style={{ color: secondary }}>{invitationDetails.names.split('&')[1]?.trim() || "Carlos"}</div>
+              <p className="text-[9px] tracking-widest uppercase font-sans" style={{ color: secondary }}>{invitationDetails.date}</p>
+            </div>
+          </div>
+        );
+      case 'boho':
+        return (
+          <div className="flex-grow flex flex-col items-center justify-center p-6 relative z-0 bg-transparent overflow-hidden">
+            <div className="absolute bottom-0 w-[85%] h-[85%] rounded-t-full pointer-events-none z-0" style={{ backgroundColor: `${accent}20` }}></div>
+            <div className="text-center w-full z-10 pt-4">
+              <span className="block text-[8px] tracking-[0.3em] uppercase mb-4 font-sans font-light" style={{ color: secondary }}>ACOMPÁÑENNOS</span>
+              <div className="text-4xl font-serif mb-4" style={{ color: secondary }}>{invitationDetails.names}</div>
+              <p className="text-[10px] tracking-widest uppercase mb-1 font-sans" style={{ color: secondary }}>{invitationDetails.date}</p>
+              <p className="text-[9px] italic font-serif mb-6" style={{ color: secondary, opacity: 0.8 }}>{invitationDetails.bottomMessage}</p>
+            </div>
+          </div>
+        );
+      case 'avant-garde':
+        return (
+          <div className="flex-grow flex flex-col items-start justify-center p-6 relative z-0 bg-transparent">
+            <div className="w-full z-10 text-left">
+              <span className="block text-[7px] tracking-[0.3em] uppercase mb-3 font-sans font-bold" style={{ color: accent }}>CELEBRACIÓN MATRIMONIAL</span>
+              <div className="text-4xl font-sans font-black leading-none tracking-tighter" style={{ color: secondary }}>{invitationDetails.names.split('&')[0]?.trim() || "ANA"}</div>
+              <span className="block text-xl font-serif italic my-1" style={{ color: secondary }}>&</span>
+              <div className="text-4xl font-sans font-black leading-none tracking-tighter mb-8" style={{ color: secondary }}>{invitationDetails.names.split('&')[1]?.trim() || "CARLOS"}</div>
+              <div className="border-t pt-4 w-full flex gap-2" style={{ borderColor: accent }}>
+                <p className="text-[8px] font-sans font-bold flex-1" style={{ color: secondary }}>{invitationDetails.date}</p>
+                <p className="text-[8px] font-sans font-bold flex-1" style={{ color: secondary }}>20:00 HRS</p>
+              </div>
+            </div>
+          </div>
+        );
+      case 'photographic':
+        return (
+          <div className="flex-grow flex flex-col items-center justify-center p-6 relative z-0 overflow-hidden bg-gray-800">
+            <div className="absolute inset-4 backdrop-blur-md rounded-xl border pointer-events-none z-10" style={{ backgroundColor: `${base}B3`, borderColor: `${accent}66` }}></div>
+            <div className="text-center w-full z-20 px-2">
+              <span className="block text-[7px] tracking-[0.3em] uppercase mb-6 font-sans font-light" style={{ color: secondary }}>CON GRAN ALEGRÍA</span>
+              <div className="text-3xl leading-tight mb-4 font-serif text-balance drop-shadow-md" style={{ color: secondary }}>
+                {invitationDetails.names}
+              </div>
+              <div className="px-4 py-2 rounded border mx-auto w-4/5 mb-4" style={{ backgroundColor: `${base}66`, borderColor: `${accent}80` }}>
+                <p className="text-[10px] tracking-widest font-light mb-1 font-sans" style={{ color: secondary }}>{invitationDetails.date}</p>
+              </div>
+              <p className="text-[9px] font-light tracking-wide font-sans" style={{ color: secondary }}>Jardín Botánico</p>
+            </div>
+          </div>
+        );
+      default:
+        return null;
     }
   };
 
@@ -269,29 +379,18 @@ const PaletteCard = ({ palette, onCopy, invitationDetails, globalViewMode }) => 
           {/* Capa de resplandor (Glare) */}
           <div className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay" style={glareStyle}></div>
           
-          {/* Diseño de la invitación premium */}
-          <div className="flex-grow flex flex-col items-center justify-center p-8 relative z-0" style={{ fontFamily: "'Playfair Display', serif" }}>
-            
-            {/* Marco Metálico Fino */}
-            <div className="absolute inset-4 border opacity-80" style={{ borderColor: accent }}></div>
-            
-            <div className="text-center px-4 w-full">
-              <span className="block text-[9px] tracking-[0.4em] uppercase mb-6" style={{ color: secondary, fontFamily: "'Montserrat', sans-serif" }}>
-                {invitationDetails.topMessage}
-              </span>
-              
-              <div 
-                className="text-4xl leading-tight mb-2 outline-none break-words text-balance" 
-                style={{ color: secondary, fontFamily: "'Alex Brush', cursive", textShadow: `0px 1px 2px ${accent}33` }}
-              >
-                {invitationDetails.names}
-              </div>
-              
-              <div className="w-16 h-[1px] my-5 mx-auto" style={{ backgroundColor: accent, opacity: 0.8 }}></div>
-              
-              <p className="text-[10px] tracking-widest uppercase mb-2 font-medium" style={{ color: secondary, fontFamily: "'Montserrat', sans-serif" }}>{invitationDetails.date}</p>
-              <p className="text-xs italic" style={{ color: secondary, opacity: 0.8 }}>{invitationDetails.bottomMessage}</p>
-            </div>
+          {/* Controles del Carrusel */}
+          <button onClick={handlePrevTemplate} className="absolute left-2 top-1/2 -translate-y-1/2 z-30 p-2 text-white bg-black/10 hover:bg-black/30 rounded-full backdrop-blur-sm transition-all shadow-sm group-hover/card:opacity-100 opacity-50"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg></button>
+          <button onClick={handleNextTemplate} className="absolute right-2 top-1/2 -translate-y-1/2 z-30 p-2 text-white bg-black/10 hover:bg-black/30 rounded-full backdrop-blur-sm transition-all shadow-sm group-hover/card:opacity-100 opacity-50"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg></button>
+
+          {/* Plantilla Dinámica */}
+          {renderTemplate()}
+          
+          {/* Indicadores de plantilla */}
+          <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-1 z-20">
+            {templates.map((t, idx) => (
+              <div key={t} className={`w-1.5 h-1.5 rounded-full transition-all ${idx === activeTemplateIndex ? 'bg-white opacity-100 scale-125' : 'bg-white opacity-40'}`} style={{ backgroundColor: secondary }}></div>
+            ))}
           </div>
 
           <button 
