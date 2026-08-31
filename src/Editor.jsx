@@ -206,6 +206,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
     accent: '#D49A89'
   });
   const [activeSmartPalette, setActiveSmartPalette] = useState(null);
+  const [seedColor, setSeedColor] = useState('#D49A89');
   
   const applyGeneratedPalette = (palette) => {
     setActiveSmartPalette(palette.colores);
