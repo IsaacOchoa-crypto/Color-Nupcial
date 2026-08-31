@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { generateHarmonies } from './colorUtils';
+import Editor from './Editor';
 
 const palettes = [
   {"nombre":"Atardecer Árido","colores":["#FFFDD0","#CC7722","#E2725B"], "tags": ["Otoño", "Playa/Cálidas"]},
@@ -115,13 +116,17 @@ const exportPalette = (palette) => {
   link.click();
 };
 
-const PaletteCard = ({ palette, onCopy }) => {
+const PaletteCard = ({ palette, onCopy, invitationDetails, globalViewMode }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const cardRef = useRef(null);
   const [tiltStyle, setTiltStyle] = useState({});
   const [glareStyle, setGlareStyle] = useState({ opacity: 0 });
   
   const [base, secondary, accent] = palette.colores;
+
+  useEffect(() => {
+    toggleFlip(globalViewMode === 'invitations');
+  }, [globalViewMode]);
 
   const handleMouseMove = (e) => {
     if (!isFlipped || !cardRef.current) return;
@@ -272,23 +277,20 @@ const PaletteCard = ({ palette, onCopy }) => {
             
             <div className="text-center px-4 w-full">
               <span className="block text-[9px] tracking-[0.4em] uppercase mb-6" style={{ color: secondary, fontFamily: "'Montserrat', sans-serif" }}>
-                Únete a nosotros
+                {invitationDetails.topMessage}
               </span>
               
               <div 
-                className="text-4xl leading-tight mb-2 outline-none whitespace-nowrap overflow-hidden text-ellipsis cursor-text" 
+                className="text-4xl leading-tight mb-2 outline-none break-words text-balance" 
                 style={{ color: secondary, fontFamily: "'Alex Brush', cursive", textShadow: `0px 1px 2px ${accent}33` }}
-                contentEditable="true"
-                suppressContentEditableWarning={true}
-                spellCheck="false"
               >
-                Ana & Carlos
+                {invitationDetails.names}
               </div>
               
               <div className="w-16 h-[1px] my-5 mx-auto" style={{ backgroundColor: accent, opacity: 0.8 }}></div>
               
-              <p className="text-[10px] tracking-widest uppercase mb-2 font-medium" style={{ color: secondary, fontFamily: "'Montserrat', sans-serif" }}>Sábado, 25 de Octubre</p>
-              <p className="text-xs italic" style={{ color: secondary, opacity: 0.8 }}>Dos mil veintiséis</p>
+              <p className="text-[10px] tracking-widest uppercase mb-2 font-medium" style={{ color: secondary, fontFamily: "'Montserrat', sans-serif" }}>{invitationDetails.date}</p>
+              <p className="text-xs italic" style={{ color: secondary, opacity: 0.8 }}>{invitationDetails.bottomMessage}</p>
             </div>
           </div>
 
@@ -312,8 +314,22 @@ function App() {
   const [toastColor, setToastColor] = useState('');
   const [activeFilter, setActiveFilter] = useState("Todas");
   
-  // Estados para la IA de color
-  const [customColor, setCustomColor] = useState('#D2691E');
+  // Pestaña Activa
+  const [currentTab, setCurrentTab] = useState('generator'); // 'generator' | 'editor'
+  
+  // Detalles globales de la invitación (Para Generador)
+  const [invitationDetails, setInvitationDetails] = useState({
+    topMessage: 'Únete a nosotros',
+    names: 'Ana & Carlos',
+    date: 'Sábado, 25 de Octubre',
+    bottomMessage: 'Dos mil veintiséis'
+  });
+  
+  // Modo de vista global
+  const [globalViewMode, setGlobalViewMode] = useState('palettes'); // 'palettes' | 'invitations'
+  
+  // Generador de Paleta (IA)
+  const [customColors, setCustomColors] = useState(['#8B5A2B']);
   const [generatedPalettes, setGeneratedPalettes] = useState([]);
 
   const handleCopy = (color) => {
@@ -327,63 +343,191 @@ function App() {
     ? palettes 
     : palettes.filter(p => p.tags.includes(activeFilter));
 
+  // Lógica para Generador de IA
   const handleGenerate = () => {
-    const newPalettes = generateHarmonies(customColor);
+    const newPalettes = customColors.flatMap(color => generateHarmonies(color));
     setGeneratedPalettes(newPalettes);
-    // Hacemos scroll suave a la sección generada
     setTimeout(() => {
       document.getElementById('generated-section')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] font-sans text-gray-900 py-16 px-4 sm:px-6 lg:px-8 relative selection:bg-rose-100 selection:text-rose-900">
-      <div className="max-w-7xl mx-auto">
-        
-        {/* Header */}
-        <header className="text-center mb-12 sm:mb-20">
-          <h1 className="text-4xl md:text-6xl font-serif text-gray-800 mb-4 md:mb-6 tracking-tight">
-            Color Nupcial <span className="text-rose-500 font-light">&</span> Co.
-          </h1>
-          <p className="text-gray-500 max-w-2xl mx-auto font-light tracking-wide text-lg md:text-xl leading-relaxed">
+    <div className="min-h-screen bg-[#faf9f7] font-sans text-gray-900 relative selection:bg-rose-100 selection:text-rose-900">
+      
+      {/* Navegación por Pestañas */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <span className="font-serif text-xl tracking-tight text-gray-800">Color Nupcial <span className="text-rose-500">&</span> Co.</span>
+            </div>
+            <div className="flex gap-2 sm:gap-4 items-center">
+              <button 
+                onClick={() => setCurrentTab('generator')}
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${currentTab === 'generator' ? 'bg-rose-50 text-rose-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+              >
+                Paletas (Antiguo)
+              </button>
+              <button 
+                onClick={() => setCurrentTab('editor')}
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${currentTab === 'editor' ? 'bg-gray-900 text-white shadow-md' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+              >
+                Editor Canva (Nuevo)
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Contenido Dinámico según la pestaña */}
+      {currentTab === 'generator' ? (
+        <div className="py-8 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          
+          {/* Header del Generador */}
+          <header className="text-center mb-12 sm:mb-20">
+            <h1 className="text-4xl md:text-6xl font-serif text-gray-800 mb-4 md:mb-6 tracking-tight">
+              Color Nupcial <span className="text-rose-500 font-light">&</span> Co.
+            </h1>
+          <p className="text-gray-500 max-w-2xl mx-auto font-light tracking-wide text-lg md:text-xl leading-relaxed mb-10">
             Descubre paletas seleccionadas siguiendo la proporción perfecta <br className="hidden md:block" />
             <span className="font-medium text-gray-700 bg-white px-2 py-1 rounded shadow-sm">60%</span> base, 
             <span className="font-medium text-gray-700 bg-white px-2 py-1 rounded shadow-sm mx-1">30%</span> secundario y 
             <span className="font-medium text-gray-700 bg-white px-2 py-1 rounded shadow-sm">10%</span> acento.
           </p>
+
+          {/* Estudio de Diseño (Formulario Global) */}
+          <div className="max-w-4xl mx-auto relative mb-12">
+            <div className="absolute inset-0 bg-white rounded-3xl shadow-lg border border-rose-100"></div>
+            <div className="relative p-6 sm:p-8 flex flex-col gap-6">
+              <h2 className="text-xl font-serif text-gray-800 text-left border-b border-gray-100 pb-3">Personaliza tu Boda</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col text-left">
+                  <label className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-2">Frase Superior</label>
+                  <input
+                    type="text"
+                    value={invitationDetails.topMessage}
+                    onChange={(e) => setInvitationDetails({...invitationDetails, topMessage: e.target.value})}
+                    className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-rose-300 focus:ring-2 focus:ring-rose-50 transition-all"
+                  />
+                </div>
+                <div className="flex flex-col text-left">
+                  <label className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-2">Nombres de la Pareja</label>
+                  <input
+                    type="text"
+                    value={invitationDetails.names}
+                    onChange={(e) => setInvitationDetails({...invitationDetails, names: e.target.value})}
+                    className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-rose-300 focus:ring-2 focus:ring-rose-50 transition-all font-serif"
+                  />
+                </div>
+                <div className="flex flex-col text-left">
+                  <label className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-2">Fecha</label>
+                  <input
+                    type="text"
+                    value={invitationDetails.date}
+                    onChange={(e) => setInvitationDetails({...invitationDetails, date: e.target.value})}
+                    className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-rose-300 focus:ring-2 focus:ring-rose-50 transition-all"
+                  />
+                </div>
+                <div className="flex flex-col text-left">
+                  <label className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-2">Mensaje Inferior</label>
+                  <input
+                    type="text"
+                    value={invitationDetails.bottomMessage}
+                    onChange={(e) => setInvitationDetails({...invitationDetails, bottomMessage: e.target.value})}
+                    className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-rose-300 focus:ring-2 focus:ring-rose-50 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Interruptor Maestro de Vista */}
+              <div className="mt-4 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <span className="text-sm font-medium text-gray-500">¿Cómo quieres ver las opciones?</span>
+                <div className="bg-gray-100 p-1 rounded-xl flex shadow-inner">
+                  <button 
+                    onClick={() => setGlobalViewMode('palettes')}
+                    className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${globalViewMode === 'palettes' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                  >
+                    Ver Paletas
+                  </button>
+                  <button 
+                    onClick={() => setGlobalViewMode('invitations')}
+                    className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${globalViewMode === 'invitations' ? 'bg-gray-900 text-white shadow-md' : 'text-gray-500 hover:text-gray-700'}`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" /></svg>
+                    Ver Invitaciones
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </header>
 
         {/* Sección: Crea tu Propia Paleta (IA) */}
         <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-12 sm:mb-20 max-w-4xl mx-auto text-center overflow-hidden relative">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-200 via-rose-400 to-rose-200"></div>
           <h2 className="text-2xl md:text-3xl font-serif text-gray-800 mb-2 mt-2">Crea tu Propia Paleta</h2>
-          <p className="text-gray-500 mb-8 font-light text-sm sm:text-base">Nuestra Inteligencia de Diseño calculará las combinaciones matemáticas perfectas para tu color base.</p>
+          <p className="text-gray-500 mb-8 font-light text-sm sm:text-base">Nuestra Inteligencia de Diseño calculará combinaciones matemáticas perfectas para tus colores base.</p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-inner border-4 border-gray-50 flex-shrink-0 cursor-pointer group">
-               <input 
-                 type="color" 
-                 value={customColor} 
-                 onChange={(e) => setCustomColor(e.target.value)}
-                 className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0"
-                 title="Selecciona tu Color Base"
-               />
-               <div className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
-                 <svg className="w-6 h-6 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-               </div>
+          <div className="flex flex-col items-center justify-center gap-8">
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {customColors.map((color, index) => (
+                <div key={index} className="flex flex-col items-center gap-2">
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-inner border-4 border-gray-50 flex-shrink-0 cursor-pointer group">
+                     <input 
+                       type="color" 
+                       value={color} 
+                       onChange={(e) => {
+                         const newColors = [...customColors];
+                         newColors[index] = e.target.value;
+                         setCustomColors(newColors);
+                       }}
+                       className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0"
+                       title={`Selecciona Color Base ${index + 1}`}
+                     />
+                     {customColors.length > 1 && (
+                       <button 
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           setCustomColors(customColors.filter((_, i) => i !== index));
+                         }}
+                         className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition-opacity"
+                         title="Eliminar Color"
+                       >
+                         X
+                       </button>
+                     )}
+                  </div>
+                  <span className="text-xs font-mono text-gray-600">{color.toUpperCase()}</span>
+                </div>
+              ))}
+              
+              {customColors.length < 5 && (
+                <div className="flex flex-col items-center gap-2">
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 hover:text-rose-400 hover:border-rose-400 hover:bg-rose-50 transition-colors bg-white flex-shrink-0 cursor-pointer overflow-hidden group">
+                    <svg className="w-6 h-6 absolute pointer-events-none z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                    <input 
+                      type="color"
+                      value="#888888"
+                      onChange={(e) => {
+                        setCustomColors([...customColors, e.target.value]);
+                      }}
+                      className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0 opacity-0"
+                      title="Añadir nuevo color base"
+                    />
+                  </div>
+                  <span className="text-xs text-gray-400">Añadir</span>
+                </div>
+              )}
             </div>
             
-            <div className="flex flex-col text-center sm:text-left items-center sm:items-start w-full sm:w-auto">
-              <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-1">Color Seleccionado</span>
-              <span className="text-xl sm:text-2xl font-mono text-gray-800 mb-5">{customColor.toUpperCase()}</span>
-              <button 
-                onClick={handleGenerate}
-                className="bg-gray-900 hover:bg-gray-800 w-full sm:w-auto justify-center text-white px-8 py-3.5 rounded-xl font-medium transition-all shadow-lg shadow-gray-200 flex items-center gap-3 transform hover:-translate-y-0.5"
-              >
-                <svg className="w-5 h-5 text-rose-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
-                Generar Armonías
-              </button>
-            </div>
+            <button 
+              onClick={handleGenerate}
+              className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3.5 rounded-xl font-medium transition-all shadow-lg shadow-gray-200 flex items-center gap-3 transform hover:-translate-y-0.5"
+            >
+              <svg className="w-5 h-5 text-rose-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+              Generar Armonías ({customColors.length * 4})
+            </button>
           </div>
         </section>
 
@@ -396,7 +540,13 @@ function App() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {generatedPalettes.map((palette, index) => (
-                <PaletteCard key={`gen-${index}`} palette={palette} onCopy={handleCopy} />
+                <PaletteCard 
+                  key={`gen-${index}`} 
+                  palette={palette} 
+                  onCopy={handleCopy} 
+                  invitationDetails={invitationDetails}
+                  globalViewMode={globalViewMode} 
+                />
               ))}
             </div>
           </div>
@@ -431,6 +581,8 @@ function App() {
               key={palette.nombre} 
               palette={palette} 
               onCopy={handleCopy} 
+              invitationDetails={invitationDetails}
+              globalViewMode={globalViewMode}
             />
           ))}
         </div>
@@ -444,8 +596,12 @@ function App() {
         <footer className="mt-28 text-center text-sm text-gray-400 font-light tracking-wide pb-8 border-t border-gray-200 pt-12">
           <p>Creado para inspirar bodas inolvidables.</p>
         </footer>
-      </div>
+        </div>
+      ) : (
+        <Editor />
+      )}
 
+      {/* Toast de notificaciones Global */}
       <div 
         className={`fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-gray-900 text-white px-6 py-4 rounded-full shadow-2xl transition-all duration-300 z-[60] ${toastMessage ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`}
       >
