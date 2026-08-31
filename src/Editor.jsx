@@ -205,15 +205,28 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
     tertiary: '#E2E8F0',
     accent: '#D49A89'
   });
-  const [seedColor, setSeedColor] = useState('#D49A89');
+  const [activeSmartPalette, setActiveSmartPalette] = useState(null);
   
   const applyGeneratedPalette = (palette) => {
+    setActiveSmartPalette(palette.colores);
     setThemeColors({
       background: palette.colores[0],
       secondaryText: palette.colores[1],
       tertiary: palette.colores[2],
       accent: palette.colores[3],
       primaryText: palette.colores[4]
+    });
+  };
+
+  const shuffleColors = () => {
+    if (!activeSmartPalette) return;
+    const shuffled = [...activeSmartPalette].sort(() => Math.random() - 0.5);
+    setThemeColors({
+      background: shuffled[0],
+      secondaryText: shuffled[1],
+      tertiary: shuffled[2],
+      accent: shuffled[3],
+      primaryText: shuffled[4]
     });
   };
 
@@ -507,41 +520,94 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
               </div>
 
               <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col gap-3">
-                <span className="text-[10px] uppercase text-gray-500 font-bold border-b border-gray-200 pb-2 mb-1">Ajuste Fino Manual</span>
+                <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-1">
+                  <span className="text-[10px] uppercase text-gray-500 font-bold">Ajuste Fino Manual</span>
+                  {activeSmartPalette && (
+                    <button onClick={shuffleColors} className="flex items-center gap-1 text-[9px] font-bold text-gray-500 hover:text-indigo-600 uppercase tracking-widest transition-colors bg-white border border-gray-200 px-2 py-1 rounded shadow-sm" title="Revolver los 5 colores aleatoriamente">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                      Mezclar
+                    </button>
+                  )}
+                </div>
                 
-                <div className="flex items-center justify-between group">
-                  <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Fondo</span>
-                  <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
-                    <input type="color" value={themeColors.background} onChange={(e) => setThemeColors({...themeColors, background: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                <div className="flex flex-col gap-1.5 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Fondo</span>
+                    <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
+                      <input type="color" value={themeColors.background} onChange={(e) => setThemeColors({...themeColors, background: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                    </div>
                   </div>
+                  {activeSmartPalette && (
+                    <div className="flex gap-1 justify-end">
+                      {activeSmartPalette.map((c, i) => (
+                        <button key={i} onClick={() => setThemeColors({...themeColors, background: c})} className="w-4 h-4 rounded-full border border-gray-200 shadow-sm hover:scale-110 transition-transform" style={{ backgroundColor: c }} title="Usar este color" />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between group">
-                  <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Textos Principales</span>
-                  <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
-                    <input type="color" value={themeColors.primaryText} onChange={(e) => setThemeColors({...themeColors, primaryText: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                <div className="flex flex-col gap-1.5 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Textos Principales</span>
+                    <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
+                      <input type="color" value={themeColors.primaryText} onChange={(e) => setThemeColors({...themeColors, primaryText: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                    </div>
                   </div>
+                  {activeSmartPalette && (
+                    <div className="flex gap-1 justify-end">
+                      {activeSmartPalette.map((c, i) => (
+                        <button key={i} onClick={() => setThemeColors({...themeColors, primaryText: c})} className="w-4 h-4 rounded-full border border-gray-200 shadow-sm hover:scale-110 transition-transform" style={{ backgroundColor: c }} title="Usar este color" />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between group">
-                  <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Textos Secundarios</span>
-                  <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
-                    <input type="color" value={themeColors.secondaryText} onChange={(e) => setThemeColors({...themeColors, secondaryText: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                <div className="flex flex-col gap-1.5 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Textos Secundarios</span>
+                    <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
+                      <input type="color" value={themeColors.secondaryText} onChange={(e) => setThemeColors({...themeColors, secondaryText: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                    </div>
                   </div>
+                  {activeSmartPalette && (
+                    <div className="flex gap-1 justify-end">
+                      {activeSmartPalette.map((c, i) => (
+                        <button key={i} onClick={() => setThemeColors({...themeColors, secondaryText: c})} className="w-4 h-4 rounded-full border border-gray-200 shadow-sm hover:scale-110 transition-transform" style={{ backgroundColor: c }} title="Usar este color" />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between group">
-                  <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Terciario (Decoración)</span>
-                  <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
-                    <input type="color" value={themeColors.tertiary} onChange={(e) => setThemeColors({...themeColors, tertiary: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                <div className="flex flex-col gap-1.5 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Terciario (Decoración)</span>
+                    <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
+                      <input type="color" value={themeColors.tertiary} onChange={(e) => setThemeColors({...themeColors, tertiary: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                    </div>
                   </div>
+                  {activeSmartPalette && (
+                    <div className="flex gap-1 justify-end">
+                      {activeSmartPalette.map((c, i) => (
+                        <button key={i} onClick={() => setThemeColors({...themeColors, tertiary: c})} className="w-4 h-4 rounded-full border border-gray-200 shadow-sm hover:scale-110 transition-transform" style={{ backgroundColor: c }} title="Usar este color" />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between group">
-                  <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Acentos (Gráficos)</span>
-                  <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
-                    <input type="color" value={themeColors.accent} onChange={(e) => setThemeColors({...themeColors, accent: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                <div className="flex flex-col gap-1.5 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Acentos (Gráficos)</span>
+                    <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
+                      <input type="color" value={themeColors.accent} onChange={(e) => setThemeColors({...themeColors, accent: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                    </div>
                   </div>
+                  {activeSmartPalette && (
+                    <div className="flex gap-1 justify-end">
+                      {activeSmartPalette.map((c, i) => (
+                        <button key={i} onClick={() => setThemeColors({...themeColors, accent: c})} className="w-4 h-4 rounded-full border border-gray-200 shadow-sm hover:scale-110 transition-transform" style={{ backgroundColor: c }} title="Usar este color" />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
