@@ -367,12 +367,12 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-80px)] bg-gray-50 border-t border-gray-200 overflow-hidden">
+    <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-80px)] bg-gray-50 border-t border-gray-200 lg:overflow-hidden min-h-[calc(100vh-80px)]">
       {/* Input invisible para los marcos fotográficos */}
       <input type="file" accept="image/*" ref={frameInputRef} onChange={handleFrameUpload} className="hidden" />
 
-      {/* PANEL LATERAL (Herramientas - 25% aprox) */}
-      <div className="w-80 bg-white border-r border-gray-200 shadow-sm flex flex-col z-10 h-full">
+      {/* PANEL LATERAL (Herramientas) */}
+      <div className="order-2 lg:order-1 w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-r border-gray-200 shadow-sm flex flex-col z-10 lg:h-full">
         <div className="p-5 border-b border-gray-100 bg-white sticky top-0 z-20 flex justify-between items-center">
           <div>
             <h2 className="text-xl font-serif text-gray-800 mb-1">Estudio de Diseño</h2>
@@ -602,8 +602,8 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
         </div>
       </div>
 
-      {/* LIENZO CENTRAL (Canvas - 75%) */}
-      <div className="flex-1 bg-gray-100/80 flex items-center justify-center p-8 overflow-hidden relative">
+      {/* LIENZO CENTRAL (Canvas) */}
+      <div className="order-1 lg:order-2 flex-1 bg-gray-100/80 flex items-center justify-center p-4 lg:p-8 overflow-hidden relative min-h-[600px] lg:min-h-0">
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
 
         {/* CONTENEDOR DE CAPTURA (Invitación) - React Key fuerza re-render de las animaciones */}
