@@ -190,7 +190,10 @@ const Editor = () => {
     photoAction: "TE INVITAN A SU BODA",
     photoDateBox: "25 OCT 2026",
     photoTimeBox: "A LAS 4:00 PM",
-    photoLocation: "Jardín Botánico"
+    photoLocation: "Jardín Botánico",
+    bohoIntro: "VEN A CELEBRAR",
+    classicInitials: "I & E",
+    avantGardeLabel: "LA BODA DE"
   });
 
   const [themeColors, setThemeColors] = useState({
@@ -213,21 +216,27 @@ const Editor = () => {
         botanicalIntro: "Tienen el honor de invitarle al enlace matrimonial",
         minimalTitle: "ENLACE MATRIMONIAL",
         photoIntro: "NUESTRAS FAMILIAS CELEBRAN",
-        photoAction: "TIENEN EL HONOR DE INVITARLE"
+        photoAction: "TIENEN EL HONOR DE INVITARLE",
+        bohoIntro: "ACOMPÁÑENNOS",
+        avantGardeLabel: "CELEBRACIÓN MATRIMONIAL"
       });
     } else if (style === 'romantic') {
       setTexts({...texts, 
         botanicalIntro: "Nuestras almas se encontraron y compartimos nuestra felicidad",
         minimalTitle: "EL INICIO DE NUESTRA HISTORIA",
         photoIntro: "CON EL CORAZÓN LLENO DE AMOR",
-        photoAction: "NOS UNIMOS PARA SIEMPRE"
+        photoAction: "NOS UNIMOS PARA SIEMPRE",
+        bohoIntro: "NUESTRO DÍA MÁGICO",
+        avantGardeLabel: "EL AMOR DE"
       });
     } else if (style === 'modern') {
       setTexts({...texts, 
         botanicalIntro: "¡Nos casamos! Y no podemos imaginar este día sin ti",
         minimalTitle: "¡NOS CASAMOS!",
         photoIntro: "SE PRENDIÓ LA FIESTA",
-        photoAction: "¡ACOMPÁÑANOS A CELEBRAR!"
+        photoAction: "¡ACOMPÁÑANOS A CELEBRAR!",
+        bohoIntro: "FIESTA DE BODA",
+        avantGardeLabel: "NOS CASAMOS"
       });
     }
     // Reprogramar la animación para que los nuevos textos aparezcan suavemente
@@ -472,27 +481,49 @@ const Editor = () => {
             </div>
           </div>
 
-          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Plantillas Base</h3>
-          <div className="space-y-4">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Plantillas Premium</h3>
+          <div className="grid grid-cols-2 gap-2 mb-4">
             <div onClick={() => { setActiveTemplate('botanical'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'botanical' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
-              <div className="bg-[#fdfbf7] h-24 p-4 flex flex-col items-center justify-center relative">
-                 <div className="absolute inset-2 border" style={{ borderColor: themeColors.accent }}></div>
-                 <span className="font-serif text-lg" style={{ color: themeColors.primaryText }}>Botánico</span>
+              <div className="bg-[#fdfbf7] h-20 p-2 flex flex-col items-center justify-center relative">
+                 <div className="absolute inset-1 border" style={{ borderColor: themeColors.accent }}></div>
+                 <span className="font-serif text-sm" style={{ color: themeColors.primaryText }}>Botánico</span>
               </div>
             </div>
 
             <div onClick={() => { setActiveTemplate('minimalist'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'minimalist' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
-              <div className="bg-white h-24 p-4 flex flex-col items-center justify-center relative">
-                 <div className="w-16 h-px mb-2" style={{ backgroundColor: themeColors.accent }}></div>
-                 <span className="font-sans font-light tracking-widest text-sm uppercase" style={{ color: themeColors.primaryText }}>Geométrico</span>
-                 <div className="w-16 h-px mt-2" style={{ backgroundColor: themeColors.accent }}></div>
+              <div className="bg-white h-20 p-2 flex flex-col items-center justify-center relative">
+                 <div className="w-10 h-px mb-1" style={{ backgroundColor: themeColors.accent }}></div>
+                 <span className="font-sans font-light tracking-widest text-[10px] uppercase" style={{ color: themeColors.primaryText }}>Geométrico</span>
+                 <div className="w-10 h-px mt-1" style={{ backgroundColor: themeColors.accent }}></div>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('boho'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'boho' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-orange-50 h-20 p-2 flex flex-col items-center justify-center relative overflow-hidden">
+                 <div className="absolute bottom-0 w-16 h-16 rounded-t-full" style={{ backgroundColor: themeColors.accent, opacity: 0.2 }}></div>
+                 <span className="font-sans font-medium text-sm z-10" style={{ color: themeColors.primaryText }}>Boho Arco</span>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('classic'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'classic' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-white h-20 p-2 flex flex-col items-center justify-center relative">
+                 <div className="absolute inset-1 border" style={{ borderColor: themeColors.accent }}></div>
+                 <div className="absolute inset-2 border" style={{ borderColor: themeColors.accent, opacity: 0.5 }}></div>
+                 <span className="font-serif text-sm" style={{ color: themeColors.primaryText }}>Imperial</span>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('avant-garde'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'avant-garde' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-gray-100 h-20 p-2 flex flex-col items-start justify-center relative">
+                 <span className="font-sans font-black text-lg leading-none tracking-tighter" style={{ color: themeColors.primaryText }}>AVANT</span>
+                 <span className="font-sans font-black text-lg leading-none tracking-tighter" style={{ color: themeColors.primaryText }}>GARDE</span>
               </div>
             </div>
 
             <div onClick={() => { setActiveTemplate('photographic'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'photographic' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
-              <div className="bg-gray-800 h-24 p-4 flex flex-col items-center justify-center relative">
+              <div className="bg-gray-800 h-20 p-2 flex flex-col items-center justify-center relative">
                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
-                 <span className="font-sans font-light text-white text-lg relative z-10" style={{ textShadow: `0 2px 4px ${themeColors.primaryText}` }}>Fotográfico</span>
+                 <span className="font-sans font-light text-white text-[10px] uppercase relative z-10" style={{ textShadow: `0 2px 4px ${themeColors.primaryText}` }}>Fotográfico</span>
               </div>
             </div>
           </div>
@@ -712,6 +743,122 @@ const Editor = () => {
                 </motion.div>
                 
                 <DraggableText delay={1.0} constraintsRef={canvasRef} tag="p" defaultText={texts.photoLocation} className="text-sm font-light tracking-wide font-sans w-full" style={{ color: themeColors.primaryText }} />
+              </div>
+            </motion.div>
+          )}
+          {/* 4. BOHO - Arco */}
+          {activeTemplate === 'boho' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 flex flex-col items-center text-center pt-16 overflow-hidden"
+            >
+              {/* Gran arco de fondo */}
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.1 }}
+                className="absolute bottom-0 w-[85%] h-[85%] rounded-t-full pointer-events-none z-0"
+                style={{ backgroundColor: `${themeColors.accent}20` }}
+              ></motion.div>
+
+              <div className="flex-1 flex flex-col items-center justify-center w-full z-20 gap-2 relative">
+                <DraggableText delay={0.2} tag="p" constraintsRef={canvasRef} defaultText={texts.bohoIntro} className="text-[10px] tracking-[0.4em] mb-4 font-sans font-light w-full uppercase" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText 
+                  delay={0.4}
+                  tag="h1" 
+                  constraintsRef={canvasRef}
+                  defaultText={texts.names} 
+                  className="text-6xl mb-6 font-serif w-full" 
+                  style={{ 
+                    fontFamily: fontFamily,
+                    color: themeColors.primaryText
+                  }} 
+                />
+                
+                <DraggableText delay={0.6} tag="p" constraintsRef={canvasRef} defaultText={texts.date} className="text-sm tracking-widest uppercase mb-1 font-sans w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.7} tag="p" constraintsRef={canvasRef} defaultText={texts.year} className="text-xs italic mb-10 font-serif w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+                
+                <DraggableText delay={0.8} tag="p" constraintsRef={canvasRef} defaultText={texts.location} className="text-sm font-sans w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.9} tag="p" constraintsRef={canvasRef} defaultText={texts.city} className="text-xs font-sans mt-1 w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 5. CLÁSICA - Imperial */}
+          {activeTemplate === 'classic' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-8 flex flex-col items-center text-center"
+            >
+              {/* Doble Marco */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.1 }}
+                className="absolute inset-6 border pointer-events-none z-10" 
+                style={{ borderColor: themeColors.accent }}
+              ></motion.div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }}
+                className="absolute inset-8 border pointer-events-none z-10" 
+                style={{ borderColor: themeColors.accent, opacity: 0.5 }}
+              ></motion.div>
+              
+              <div className="flex-1 flex flex-col items-center justify-center w-full z-20 gap-2 mt-8">
+                <DraggableText delay={0.2} tag="p" constraintsRef={canvasRef} defaultText={texts.classicInitials} className="text-3xl font-serif w-full mb-6" style={{ color: themeColors.accent }} />
+                <DraggableText delay={0.3} tag="p" constraintsRef={canvasRef} defaultText={texts.botanicalIntro} className="text-[9px] tracking-widest uppercase font-sans w-full" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText 
+                  delay={0.4}
+                  tag="h1" 
+                  constraintsRef={canvasRef}
+                  defaultText={texts.names} 
+                  className="text-5xl my-4 font-serif w-full" 
+                  style={{ fontFamily: fontFamily, color: themeColors.primaryText }} 
+                />
+                
+                <DraggableText delay={0.5} tag="p" constraintsRef={canvasRef} defaultText={texts.date} className="text-sm uppercase font-sans w-full mt-4" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.6} tag="p" constraintsRef={canvasRef} defaultText={texts.year} className="text-xs font-serif w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+                
+                <DraggableText delay={0.8} tag="p" constraintsRef={canvasRef} defaultText={texts.location} className="text-sm font-sans w-full mt-8" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.9} tag="p" constraintsRef={canvasRef} defaultText={texts.city} className="text-xs font-sans mt-1 w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 6. AVANT-GARDE - Tipográfico */}
+          {activeTemplate === 'avant-garde' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-10 flex flex-col items-start justify-center text-left"
+            >
+              <div className="z-20 w-full relative">
+                <DraggableText delay={0.1} tag="p" constraintsRef={canvasRef} defaultText={texts.avantGardeLabel} className="text-[10px] tracking-[0.4em] uppercase mb-4 font-sans font-bold w-full text-left" style={{ color: themeColors.accent }} />
+                
+                <DraggableText 
+                  delay={0.3}
+                  tag="h1" 
+                  constraintsRef={canvasRef}
+                  defaultText={texts.minimalGroom} 
+                  className="text-7xl font-sans font-black w-full text-left leading-none tracking-tighter" 
+                  style={{ fontFamily: fontFamily, color: themeColors.primaryText }} 
+                />
+                <DraggableText delay={0.4} tag="p" constraintsRef={canvasRef} defaultText="&" className="text-4xl font-serif italic my-2 w-full text-left" style={{ color: themeColors.secondaryText }} />
+                <DraggableText 
+                  delay={0.5}
+                  tag="h1" 
+                  constraintsRef={canvasRef}
+                  defaultText={texts.minimalBride} 
+                  className="text-7xl font-sans font-black mb-12 w-full text-left leading-none tracking-tighter" 
+                  style={{ fontFamily: fontFamily, color: themeColors.primaryText }} 
+                />
+                
+                <div className="flex w-full mt-8 gap-4 border-t-2 pt-6" style={{ borderColor: themeColors.accent }}>
+                  <div className="flex-1">
+                    <DraggableText delay={0.7} tag="p" constraintsRef={canvasRef} defaultText={texts.minimalDate} className="text-sm font-sans font-bold" style={{ color: themeColors.primaryText }} />
+                    <DraggableText delay={0.8} tag="p" constraintsRef={canvasRef} defaultText={texts.minimalTime} className="text-[10px] font-sans uppercase mt-1" style={{ color: themeColors.secondaryText }} />
+                  </div>
+                  <div className="flex-1">
+                    <DraggableText delay={0.9} tag="p" constraintsRef={canvasRef} defaultText={texts.minimalLocation} className="text-sm font-sans font-bold" style={{ color: themeColors.primaryText }} />
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
