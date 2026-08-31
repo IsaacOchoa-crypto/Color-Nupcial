@@ -331,6 +331,7 @@ function App() {
   // Generador de Paleta (IA)
   const [customColors, setCustomColors] = useState(['#8B5A2B']);
   const [generatedPalettes, setGeneratedPalettes] = useState([]);
+  const isAddingColorRef = useRef(false);
 
   const handleCopy = (color) => {
     navigator.clipboard.writeText(color);
@@ -509,8 +510,18 @@ function App() {
                     <input 
                       type="color"
                       value="#888888"
+                      onClick={() => {
+                        isAddingColorRef.current = true;
+                      }}
                       onChange={(e) => {
-                        setCustomColors([...customColors, e.target.value]);
+                        if (isAddingColorRef.current) {
+                          setCustomColors([...customColors, e.target.value]);
+                          isAddingColorRef.current = false;
+                        } else {
+                          const newColors = [...customColors];
+                          newColors[newColors.length - 1] = e.target.value;
+                          setCustomColors(newColors);
+                        }
                       }}
                       className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0 opacity-0"
                       title="Añadir nuevo color base"
