@@ -37,22 +37,29 @@ export const hslToHex = (h, s, l) => {
   return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
 };
 
-// Generador de Armonías
+// Generador de Armonías (5 Colores)
 export const generateHarmonies = (baseHex) => {
   const { h, s, l } = hexToHSL(baseHex);
   
   // Helpers para asegurar que los valores estén dentro de rangos legibles
-  const clampL = (val) => Math.max(15, Math.min(85, val)); 
+  const clampL = (val) => Math.max(10, Math.min(95, val)); 
   const clampS = (val) => Math.max(10, Math.min(100, val));
   const wrapH = (val) => (val + 360) % 360;
+
+  // Color de texto con alto contraste respecto al fondo (Base)
+  const textColor = l > 50 
+    ? hslToHex(h, clampS(s - 30), 15) // Fondo claro -> Texto muy oscuro
+    : hslToHex(h, clampS(s - 30), 95); // Fondo oscuro -> Texto muy claro
 
   return [
     {
       nombre: "Contraste Audaz (Complementaria)",
       colores: [
         baseHex, 
-        hslToHex(wrapH(h + 180), clampS(s), clampL(l - 20)), // Opuesto más oscuro
-        hslToHex(wrapH(h + 180), clampS(s + 20), clampL(l + 15)) // Opuesto más claro
+        hslToHex(wrapH(h + 180), clampS(s), clampL(l - 15)), // Secundario
+        hslToHex(wrapH(h + 180), clampS(s - 10), clampL(l + 15)), // Terciario
+        hslToHex(wrapH(h + 180), clampS(s + 30), clampL(l > 50 ? 40 : 60)), // Acento vibrante
+        textColor // Tinta / Texto
       ],
       tags: ["Generada por IA"]
     },
@@ -60,8 +67,10 @@ export const generateHarmonies = (baseHex) => {
       nombre: "Vibra Natural (Análoga)",
       colores: [
         baseHex,
-        hslToHex(wrapH(h + 30), clampS(s), clampL(l - 15)),
-        hslToHex(wrapH(h - 30), clampS(s), clampL(l + 10))
+        hslToHex(wrapH(h + 30), clampS(s), clampL(l - 15)), // Secundario
+        hslToHex(wrapH(h - 30), clampS(s), clampL(l + 10)), // Terciario
+        hslToHex(wrapH(h + 60), clampS(s + 20), clampL(l > 50 ? 45 : 65)), // Acento
+        textColor // Tinta / Texto
       ],
       tags: ["Generada por IA"]
     },
@@ -69,8 +78,10 @@ export const generateHarmonies = (baseHex) => {
       nombre: "Elegancia Pura (Monocromática)",
       colores: [
         baseHex,
-        hslToHex(h, clampS(s - 10), clampL(l - 35)), // Mucho más oscuro
-        hslToHex(h, clampS(s - 20), clampL(l + 25))  // Más claro
+        hslToHex(h, clampS(s - 10), clampL(l - 35)), // Secundario oscuro
+        hslToHex(h, clampS(s - 15), clampL(l + 25)), // Terciario claro
+        hslToHex(h, clampS(s + 20), clampL(l > 50 ? 25 : 75)), // Acento tonal
+        textColor // Tinta / Texto
       ],
       tags: ["Generada por IA"]
     },
@@ -78,8 +89,10 @@ export const generateHarmonies = (baseHex) => {
       nombre: "Equilibrio Perfecto (Dividida)",
       colores: [
         baseHex,
-        hslToHex(wrapH(h + 150), clampS(s), clampL(l - 15)),
-        hslToHex(wrapH(h + 210), clampS(s), clampL(l + 10))
+        hslToHex(wrapH(h + 150), clampS(s), clampL(l - 15)), // Secundario
+        hslToHex(wrapH(h + 210), clampS(s), clampL(l + 10)), // Terciario
+        hslToHex(wrapH(h + 180), clampS(s + 25), clampL(l > 50 ? 40 : 70)), // Acento
+        textColor // Tinta / Texto
       ],
       tags: ["Generada por IA"]
     }

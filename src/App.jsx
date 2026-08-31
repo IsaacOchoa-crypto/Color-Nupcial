@@ -127,7 +127,7 @@ const PaletteCard = ({ palette, onCopy, invitationDetails, globalViewMode }) => 
     ...(palette.customTemplates || []).map(t => `custom-${t.id}`)
   ];
   
-  const [base, secondary, accent] = palette.colores;
+  const [base, secondary, tertiary, accent, text] = palette.colores;
 
   const handlePrevTemplate = (e) => {
     e.stopPropagation();
@@ -344,37 +344,45 @@ const PaletteCard = ({ palette, onCopy, invitationDetails, globalViewMode }) => 
             </h3>
             
             <div className="flex w-full h-28 rounded-xl overflow-hidden shadow-inner mb-6 shrink-0">
-              {palette.colores.map((color, idx) => (
-                <div 
-                  key={idx}
-                  onClick={() => onCopy(color)}
-                  className="h-full cursor-pointer transition-all duration-300 hover:brightness-110 relative group"
-                  style={{ width: idx === 0 ? '60%' : idx === 1 ? '30%' : '10%', backgroundColor: color }}
-                  title={`Copiar ${idx === 0 ? 'Base' : idx === 1 ? 'Secundario' : 'Acento'}`}
-                >
-                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 backdrop-blur-[1px]">
-                      {idx === 2 ? (
-                        <svg className="w-4 h-4 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                      ) : (
-                        <span className="text-white text-xs font-semibold drop-shadow-md tracking-widest uppercase">Copiar</span>
-                      )}
-                   </div>
-                </div>
-              ))}
+              {palette.colores.map((color, idx) => {
+                const widths = ['40%', '20%', '15%', '15%', '10%'];
+                const labels = ['Base', 'Secundario', 'Terciario', 'Acento', 'Texto'];
+                return (
+                  <div 
+                    key={idx}
+                    onClick={() => onCopy(color)}
+                    className="h-full cursor-pointer transition-all duration-300 hover:brightness-110 relative group"
+                    style={{ width: widths[idx], backgroundColor: color }}
+                    title={`Copiar ${labels[idx]}`}
+                  >
+                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 backdrop-blur-[1px]">
+                        {idx >= 2 ? (
+                          <svg className="w-4 h-4 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                        ) : (
+                          <span className="text-white text-xs font-semibold drop-shadow-md tracking-widest uppercase">Copiar</span>
+                        )}
+                     </div>
+                  </div>
+                );
+              })}
             </div>
 
             <div className="flex text-xs font-medium text-gray-500 mb-6 shrink-0">
-              {palette.colores.map((color, idx) => (
-                <div key={idx} className={`flex flex-col items-center ${idx === 1 ? 'border-l border-r border-gray-100' : ''}`} style={{ width: idx === 0 ? '60%' : idx === 1 ? '30%' : '10%' }}>
-                  <span className="mb-2 text-[10px] uppercase tracking-widest text-gray-400 font-semibold">{idx === 0 ? 'Base' : idx === 1 ? 'Sec' : 'Acc'}</span>
-                  <button 
-                    onClick={() => onCopy(color)}
-                    className="cursor-pointer hover:text-gray-900 transition-colors bg-transparent border-none p-1 focus:outline-none tracking-wider rounded hover:bg-gray-50"
-                  >
-                    {color}
-                  </button>
-                </div>
-              ))}
+              {palette.colores.map((color, idx) => {
+                const widths = ['40%', '20%', '15%', '15%', '10%'];
+                const abbrs = ['B', 'S', 'T', 'A', 'Txt'];
+                return (
+                  <div key={idx} className={`flex flex-col items-center border-gray-100 ${idx > 0 && idx < 4 ? 'border-r' : ''}`} style={{ width: widths[idx] }}>
+                    <span className="mb-2 text-[10px] uppercase tracking-widest text-gray-400 font-semibold">{abbrs[idx]}</span>
+                    <button 
+                      onClick={() => onCopy(color)}
+                      className="cursor-pointer hover:text-gray-900 transition-colors bg-transparent border-none p-1 focus:outline-none tracking-wider rounded hover:bg-gray-50 text-[9px] sm:text-[10px]"
+                    >
+                      {color}
+                    </button>
+                  </div>
+                );
+              })}
             </div>
             
             <button 

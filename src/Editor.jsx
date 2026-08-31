@@ -201,6 +201,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
     background: '#FDFBF7',
     primaryText: '#22543D',
     secondaryText: '#4A5568',
+    tertiary: '#E2E8F0',
     accent: '#D49A89'
   });
   const [fontFamily, setFontFamily] = useState("'Playfair Display', serif");
@@ -479,6 +480,13 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                   <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Textos Secundarios</span>
                   <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
                     <input type="color" value={themeColors.secondaryText} onChange={(e) => setThemeColors({...themeColors, secondaryText: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between group">
+                  <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Terciario (Decoración)</span>
+                  <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-sm border border-gray-200 shrink-0 cursor-pointer">
+                    <input type="color" value={themeColors.tertiary} onChange={(e) => setThemeColors({...themeColors, tertiary: e.target.value})} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
                   </div>
                 </div>
 
