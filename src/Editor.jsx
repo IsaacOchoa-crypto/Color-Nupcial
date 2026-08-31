@@ -551,7 +551,6 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                  <span className="font-sans font-light text-white text-[10px] uppercase relative z-10" style={{ textShadow: `0 2px 4px ${themeColors.primaryText}` }}>Fotográfico</span>
               </div>
             </div>
-            </div>
 
             {/* Botón Importar Canva (SVG) */}
             <div className="col-span-2 mt-2">
