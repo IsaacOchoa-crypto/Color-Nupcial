@@ -3,6 +3,7 @@ import * as htmlToImage from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import { motion, useDragControls } from 'framer-motion';
 import { processSVGTemplate } from './svgUtils';
+import { generateHarmonies } from './colorUtils';
 
 // Componente de texto arrastrable e interactivo (Ahora con Animaciones)
 const DraggableText = ({ tag: Tag = 'div', className, defaultText, style, constraintsRef, delay = 0 }) => {
@@ -204,6 +205,18 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
     tertiary: '#E2E8F0',
     accent: '#D49A89'
   });
+  const [seedColor, setSeedColor] = useState('#D49A89');
+  
+  const applyGeneratedPalette = (palette) => {
+    setThemeColors({
+      background: palette.colores[0],
+      secondaryText: palette.colores[1],
+      tertiary: palette.colores[2],
+      accent: palette.colores[3],
+      primaryText: palette.colores[4]
+    });
+  };
+
   const [fontFamily, setFontFamily] = useState("'Playfair Display', serif");
   
   const canvasRef = useRef(null);
@@ -459,8 +472,42 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
           <div className="mb-8">
             <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Estilo Global</h3>
             <div className="space-y-4">
+              
+              {/* PALETA INTELIGENTE (IA) */}
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-xl border border-indigo-100 flex flex-col gap-3 shadow-sm">
+                <div className="flex justify-between items-center border-b border-indigo-200/50 pb-2 mb-1">
+                  <span className="text-[10px] uppercase text-indigo-500 font-bold flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    Paleta Inteligente
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-medium text-indigo-400">Semilla:</span>
+                    <div className="relative w-5 h-5 rounded overflow-hidden shadow-sm border border-indigo-200 shrink-0 cursor-pointer">
+                      <input type="color" value={seedColor} onChange={(e) => setSeedColor(e.target.value)} className="absolute inset-[-50%] w-[200%] h-[200%] cursor-pointer border-none p-0 m-0" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col gap-2">
+                  {generateHarmonies(seedColor).map((pal, idx) => (
+                    <div 
+                      key={idx} 
+                      onClick={() => applyGeneratedPalette(pal)}
+                      className="group flex h-6 w-full rounded-md overflow-hidden cursor-pointer shadow-sm hover:shadow-md hover:scale-[1.02] transition-all border border-black/5"
+                      title={`Aplicar ${pal.nombre}`}
+                    >
+                      {pal.colores.map((c, i) => (
+                        <div key={i} style={{ backgroundColor: c, width: i === 0 ? '40%' : i === 1 ? '20%' : i === 4 ? '10%' : '15%' }} className="h-full relative">
+                          <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col gap-3">
-                <span className="text-[10px] uppercase text-gray-500 font-bold border-b border-gray-200 pb-2 mb-1">Paleta Manual</span>
+                <span className="text-[10px] uppercase text-gray-500 font-bold border-b border-gray-200 pb-2 mb-1">Ajuste Fino Manual</span>
                 
                 <div className="flex items-center justify-between group">
                   <span className="text-xs text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Fondo</span>
