@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { generateHarmonies } from './colorUtils';
+import { generateHarmonies, hexToHSL, hslToHex } from './colorUtils';
 import Editor from './Editor';
 
-const palettes = [
+const rawPalettes = [
   {"nombre":"Atardecer Árido","colores":["#FFFDD0","#CC7722","#E2725B"], "tags": ["Otoño", "Playa/Cálidas"]},
   {"nombre":"Dunas y Cobre","colores":["#F5F5DC","#D2691E","#B87333"], "tags": ["Otoño", "Rústicas"]},
   {"nombre":"Cañón Cálido","colores":["#FAF0E6","#B7410E","#9DC183"], "tags": ["Otoño", "Rústicas"]},
@@ -35,6 +35,22 @@ const palettes = [
   {"nombre":"Granate y Arena","colores":["#780000","#C1121F","#FDF0D5"], "tags": ["Oscuras y Elegantes", "Otoño"]}
 ];
 
+const expandPalette = (colors) => {
+  if (colors.length >= 5) return colors;
+  const [base, secondary, accent] = colors;
+  const { h, s, l } = hexToHSL(base);
+  const sHSL = hexToHSL(secondary);
+  
+  const tertiary = hslToHex(sHSL.h, Math.max(10, sHSL.s - 15), Math.min(85, sHSL.l + 15));
+  const textColor = l > 50 
+    ? hslToHex(h, Math.max(10, s - 30), 15) 
+    : hslToHex(h, Math.max(10, s - 30), 95);
+    
+  return [base, secondary, tertiary, accent, textColor];
+};
+
+const palettes = rawPalettes.map(p => ({...p, colores: expandPalette(p.colores)}));
+
 const filters = ["Todas", "Primavera", "Otoño", "Playa/Cálidas", "Rústicas", "Clásicas", "Oscuras y Elegantes"];
 
 const exportPalette = (palette) => {
@@ -57,21 +73,22 @@ const exportPalette = (palette) => {
   // Subtitle
   ctx.fillStyle = '#6b7280';
   ctx.font = '300 32px sans-serif';
-  ctx.fillText('Proporción de Color Nupcial (60 - 30 - 10)', canvas.width / 2, 230);
+  ctx.fillText('Proporción de Color Nupcial (60 - 15 - 10 - 10 - 5)', canvas.width / 2, 230);
   
   // Layout
   const startY = 320;
   const barHeight = 400;
   
-  // Colors
-  ctx.fillStyle = palette.colores[0];
-  ctx.fillRect(100, startY, 600, barHeight); // 60%
+  // Widths (40%, 20%, 15%, 15%, 10%) relative to 1000px width
+  const blockWidths = [400, 200, 150, 150, 100];
+  const labels = ['BASE', 'SECUNDARIO', 'TERCIARIO', 'ACENTO', 'TEXTO'];
+  let currentX = 100;
   
-  ctx.fillStyle = palette.colores[1];
-  ctx.fillRect(700, startY, 300, barHeight); // 30%
-  
-  ctx.fillStyle = palette.colores[2];
-  ctx.fillRect(1000, startY, 100, barHeight); // 10%
+  for (let i = 0; i < 5; i++) {
+    ctx.fillStyle = palette.colores[i];
+    ctx.fillRect(currentX, startY, blockWidths[i], barHeight);
+    currentX += blockWidths[i];
+  }
   
   // Border
   ctx.strokeStyle = '#e5e7eb';
@@ -80,29 +97,20 @@ const exportPalette = (palette) => {
   
   ctx.textAlign = 'center';
   
-  // Labels Base
-  ctx.fillStyle = '#6b7280';
-  ctx.font = '600 24px sans-serif';
-  ctx.fillText('BASE', 400, startY + barHeight + 60);
-  ctx.fillStyle = '#1f2937';
-  ctx.font = '300 36px monospace';
-  ctx.fillText(palette.colores[0], 400, startY + barHeight + 110);
-  
-  // Labels Secondary
-  ctx.fillStyle = '#6b7280';
-  ctx.font = '600 24px sans-serif';
-  ctx.fillText('SECUNDARIO', 850, startY + barHeight + 60);
-  ctx.fillStyle = '#1f2937';
-  ctx.font = '300 36px monospace';
-  ctx.fillText(palette.colores[1], 850, startY + barHeight + 110);
-  
-  // Labels Accent
-  ctx.fillStyle = '#6b7280';
-  ctx.font = '600 24px sans-serif';
-  ctx.fillText('ACENTO', 1050, startY + barHeight + 60);
-  ctx.fillStyle = '#1f2937';
-  ctx.font = '300 36px monospace';
-  ctx.fillText(palette.colores[2], 1050, startY + barHeight + 110);
+  // Text labels under colors
+  currentX = 100;
+  for (let i = 0; i < 5; i++) {
+    const center = currentX + (blockWidths[i] / 2);
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '600 20px sans-serif';
+    ctx.fillText(labels[i], center, startY + barHeight + 60);
+    
+    ctx.fillStyle = '#1f2937';
+    ctx.font = '300 24px monospace';
+    ctx.fillText(palette.colores[i], center, startY + barHeight + 110);
+    
+    currentX += blockWidths[i];
+  }
   
   // Footer
   ctx.fillStyle = '#9ca3af';
