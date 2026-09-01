@@ -156,6 +156,49 @@ const DraggableSVG = ({ id, svgType, color, className, constraintsRef, onDelete,
             <path d="M 10 45 Q 20 60, 10 70" fill="none" stroke={color} strokeWidth="1" />
           </svg>
         );
+      case 'esquina_rosa':
+        return (
+          <svg className="w-full h-full pointer-events-none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 5 50 Q 5 5, 50 5" fill="none" stroke={color} strokeWidth="1" opacity="0.8"/>
+            <path d="M 5 70 Q 15 15, 70 5" fill="none" stroke={color} strokeWidth="0.5" opacity="0.6"/>
+            <path d="M 20 20 C 15 15, 25 10, 30 20 C 35 25, 25 30, 20 20 Z" fill={color} opacity="0.9"/>
+            <path d="M 15 20 C 10 25, 15 35, 25 30 C 25 20, 15 15, 15 20 Z" fill={color} opacity="0.8"/>
+            <path d="M 25 30 C 35 35, 45 25, 35 15 C 25 15, 25 25, 25 30 Z" fill={color} opacity="0.7"/>
+            <path d="M 35 15 C 45 5, 20 -5, 12 10 C 10 15, 25 15, 35 15 Z" fill={color} opacity="0.6"/>
+            <path d="M 12 10 C 2 10, -5 25, 10 35 C 15 40, 20 20, 12 10 Z" fill={color} opacity="0.5"/>
+            <path d="M 10 35 C 20 45, 45 45, 45 30 C 50 15, 30 20, 10 35 Z" fill={color} opacity="0.4"/>
+            <path d="M 35 30 C 45 35, 55 45, 45 55 C 40 50, 35 40, 35 30 Z" fill={color} opacity="0.7"/>
+            <path d="M 30 35 C 35 45, 45 55, 35 65 C 30 60, 25 50, 30 35 Z" fill={color} opacity="0.6"/>
+          </svg>
+        );
+      case 'esquina_botanica':
+        return (
+          <svg className="w-full h-full pointer-events-none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 10 10 L 10 80 M 10 10 L 80 10" fill="none" stroke={color} strokeWidth="1" opacity="0.5"/>
+            <path d="M 15 15 Q 30 30, 45 45 Q 60 40, 75 25" fill="none" stroke={color} strokeWidth="1.5" opacity="0.8"/>
+            <path d="M 15 15 Q 30 30, 45 45 Q 40 60, 25 75" fill="none" stroke={color} strokeWidth="1.5" opacity="0.8"/>
+            <circle cx="45" cy="45" r="4" fill={color} opacity="0.9"/>
+            <circle cx="75" cy="25" r="3" fill={color} opacity="0.7"/>
+            <circle cx="25" cy="75" r="3" fill={color} opacity="0.7"/>
+            <path d="M 25 25 Q 35 15, 45 25 Q 35 35, 25 25 Z" fill={color} opacity="0.6"/>
+            <path d="M 35 35 Q 45 25, 55 35 Q 45 45, 35 35 Z" fill={color} opacity="0.6"/>
+            <path d="M 55 30 Q 65 20, 75 30 Q 65 40, 55 30 Z" fill={color} opacity="0.5"/>
+            <path d="M 30 55 Q 20 65, 30 75 Q 40 65, 30 55 Z" fill={color} opacity="0.5"/>
+          </svg>
+        );
+      case 'esquina_orquidea':
+        return (
+          <svg className="w-full h-full pointer-events-none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 5 5 Q 30 10, 50 30" fill="none" stroke={color} strokeWidth="1" opacity="0.7"/>
+            <path d="M 50 30 C 60 10, 80 10, 90 30 C 80 40, 60 40, 50 30 Z" fill={color} opacity="0.6"/>
+            <path d="M 50 30 C 70 20, 90 40, 70 60 C 60 50, 40 40, 50 30 Z" fill={color} opacity="0.5"/>
+            <path d="M 50 30 C 40 40, 50 60, 70 70 C 80 50, 60 40, 50 30 Z" fill={color} opacity="0.4"/>
+            <path d="M 50 30 C 30 40, 30 60, 40 80 C 50 60, 40 40, 50 30 Z" fill={color} opacity="0.7"/>
+            <path d="M 50 30 C 30 20, 10 30, 20 50 C 30 40, 40 40, 50 30 Z" fill={color} opacity="0.8"/>
+            <path d="M 50 30 Q 60 40, 65 35" fill="none" stroke={color} strokeWidth="1.5" opacity="0.9"/>
+            <circle cx="65" cy="35" r="1.5" fill={color}/>
+          </svg>
+        );
       // FASE 2: MÁSCARAS FOTOGRÁFICAS
       case 'foto-arco':
         return (
@@ -630,6 +673,28 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                 <path d="M 25 25 C 35 15, 55 15, 45 35 C 35 45, 15 35, 25 25" fill="currentColor" stroke="none"/>
               </svg>
               <span className="text-[9px] uppercase font-bold text-gray-500">Esquina</span>
+            </button>
+            <button onClick={() => handleAddElement('esquina_rosa')} className="bg-gray-50 border border-gray-100 hover:border-rose-300 hover:bg-rose-50 rounded-xl p-2 flex flex-col items-center justify-center transition-all group shadow-sm">
+              <svg className="w-6 h-6 text-gray-400 group-hover:text-rose-400 mb-1" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <path d="M 5 50 Q 5 5, 50 5" strokeWidth="2"/>
+                <path d="M 20 20 C 15 15, 25 10, 30 20 C 35 25, 25 30, 20 20 Z" fill="currentColor" opacity="0.9" stroke="none"/>
+                <path d="M 15 20 C 10 25, 15 35, 25 30 C 25 20, 15 15, 15 20 Z" fill="currentColor" opacity="0.8" stroke="none"/>
+              </svg>
+              <span className="text-[9px] uppercase font-bold text-gray-500">Rosa</span>
+            </button>
+            <button onClick={() => handleAddElement('esquina_botanica')} className="bg-gray-50 border border-gray-100 hover:border-rose-300 hover:bg-rose-50 rounded-xl p-2 flex flex-col items-center justify-center transition-all group shadow-sm">
+              <svg className="w-6 h-6 text-gray-400 group-hover:text-rose-400 mb-1" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <path d="M 15 15 Q 30 30, 45 45 Q 60 40, 75 25" strokeWidth="2"/>
+                <circle cx="45" cy="45" r="6" fill="currentColor" stroke="none"/>
+              </svg>
+              <span className="text-[9px] uppercase font-bold text-gray-500">Botánica</span>
+            </button>
+            <button onClick={() => handleAddElement('esquina_orquidea')} className="bg-gray-50 border border-gray-100 hover:border-rose-300 hover:bg-rose-50 rounded-xl p-2 flex flex-col items-center justify-center transition-all group shadow-sm">
+              <svg className="w-6 h-6 text-gray-400 group-hover:text-rose-400 mb-1" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <path d="M 5 5 Q 30 10, 50 30" strokeWidth="2"/>
+                <path d="M 50 30 C 60 10, 80 10, 90 30 C 80 40, 60 40, 50 30 Z" fill="currentColor" stroke="none"/>
+              </svg>
+              <span className="text-[9px] uppercase font-bold text-gray-500">Orquídea</span>
             </button>
           </div>
 
