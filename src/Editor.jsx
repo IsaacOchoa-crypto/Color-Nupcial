@@ -393,6 +393,90 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
     }
   };
 
+  const renderTextInputs = () => {
+    const templateFields = {
+      botanical: [
+        { key: 'botanicalIntro', label: 'Frase Superior' },
+        { key: 'names', label: 'Nombres de la Pareja' },
+        { key: 'date', label: 'Fecha' },
+        { key: 'year', label: 'Año / Detalle' },
+        { key: 'location', label: 'Lugar' },
+        { key: 'city', label: 'Ciudad' },
+      ],
+      minimal: [
+        { key: 'minimalTitle', label: 'Título Principal' },
+        { key: 'names', label: 'Nombres' },
+        { key: 'minimalDate', label: 'Fecha (Corta)' },
+        { key: 'minimalTime', label: 'Hora' },
+        { key: 'minimalLocation', label: 'Salón / Ubicación' },
+      ],
+      'photo-frame': [
+        { key: 'photoIntro', label: 'Frase Superior' },
+        { key: 'names', label: 'Nombres' },
+        { key: 'photoAction', label: 'Mensaje' },
+        { key: 'photoDateBox', label: 'Fecha Destacada' },
+        { key: 'photoTimeBox', label: 'Hora' },
+        { key: 'photoLocation', label: 'Lugar' },
+      ],
+      boho: [
+        { key: 'bohoIntro', label: 'Frase Superior' },
+        { key: 'names', label: 'Nombres' },
+        { key: 'date', label: 'Fecha' },
+        { key: 'year', label: 'Año / Detalle' },
+        { key: 'location', label: 'Lugar' },
+        { key: 'city', label: 'Ciudad' },
+      ],
+      classic: [
+        { key: 'classicInitials', label: 'Iniciales' },
+        { key: 'botanicalIntro', label: 'Frase Superior' },
+        { key: 'names', label: 'Nombres' },
+        { key: 'date', label: 'Fecha' },
+        { key: 'location', label: 'Lugar' },
+      ],
+      'avant-garde': [
+        { key: 'avantGardeLabel', label: 'Etiqueta' },
+        { key: 'names', label: 'Nombres (Corto)' },
+        { key: 'date', label: 'Fecha' },
+        { key: 'location', label: 'Lugar' },
+        { key: 'city', label: 'Ciudad' },
+      ]
+    };
+
+    let fields = templateFields[activeTemplate] || [
+      { key: 'names', label: 'Nombres de la Pareja' },
+      { key: 'date', label: 'Fecha' }
+    ];
+
+    if (activeTemplate.startsWith('custom-')) {
+      fields = [
+        { key: 'names', label: 'Nombres de la Pareja' },
+        { key: 'date', label: 'Fecha' }
+      ];
+    }
+
+    return (
+      <div className="mb-8 p-4 bg-rose-50/30 rounded-xl border border-rose-100 shadow-sm">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-rose-500 mb-4 flex items-center gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+          Personaliza tus Textos
+        </h3>
+        <div className="flex flex-col gap-3">
+          {fields.map(f => (
+            <div key={f.key}>
+              <label className="block text-[9px] uppercase tracking-wider text-gray-500 mb-1">{f.label}</label>
+              <input 
+                type="text"
+                value={texts[f.key]}
+                onChange={(e) => setTexts({...texts, [f.key]: e.target.value})}
+                className="w-full bg-white border border-gray-200 rounded px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-400 transition-shadow"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-80px)] bg-gray-50 border-t border-gray-200 lg:overflow-hidden min-h-[calc(100vh-80px)]">
       {/* Input invisible para los marcos fotográficos */}
@@ -421,6 +505,9 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
               <button onClick={() => applyMagicText('modern')} className="flex-1 bg-white border border-indigo-200 text-indigo-700 py-1.5 rounded text-[10px] font-bold uppercase hover:bg-indigo-100 transition-colors">Moderno</button>
             </div>
           </div>
+          
+          {/* FORMULARIO DE TEXTOS DINÁMICO */}
+          {renderTextInputs()}
           
           <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Decoración y Fotos</h3>
           
