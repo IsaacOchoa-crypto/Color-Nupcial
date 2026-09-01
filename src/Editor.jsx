@@ -403,7 +403,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
         { key: 'location', label: 'Lugar' },
         { key: 'city', label: 'Ciudad' },
       ],
-      minimal: [
+      minimalist: [
         { key: 'minimalTitle', label: 'Título Principal' },
         { key: 'names', label: 'Nombres' },
         { key: 'minimalDate', label: 'Fecha (Corta)' },
@@ -906,7 +906,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                   delay={0.4}
                   constraintsRef={canvasRef}
                   tag="h1" 
-                  defaultText={texts.minimalGroom} 
+                  defaultText={texts.names ? texts.names.split('&')[0]?.trim() || '' : ''} 
                   className="text-4xl tracking-widest font-sans font-light w-full" 
                   style={{ 
                     fontFamily: fontFamily,
@@ -920,7 +920,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                   delay={0.6}
                   constraintsRef={canvasRef}
                   tag="h1" 
-                  defaultText={texts.minimalBride} 
+                  defaultText={texts.names ? texts.names.split('&')[1]?.trim() || '' : ''} 
                   className="text-4xl tracking-widest font-sans font-light mb-16 w-full" 
                   style={{ 
                     fontFamily: fontFamily,
@@ -1106,7 +1106,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                   delay={0.3}
                   tag="h1" 
                   constraintsRef={canvasRef}
-                  defaultText={texts.minimalGroom} 
+                  defaultText={texts.names ? texts.names.split('&')[0]?.trim() || '' : ''} 
                   className="text-7xl font-sans font-black w-full text-left leading-none tracking-tighter" 
                   style={{ fontFamily: fontFamily, color: themeColors.primaryText }} 
                 />
@@ -1115,7 +1115,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                   delay={0.5}
                   tag="h1" 
                   constraintsRef={canvasRef}
-                  defaultText={texts.minimalBride} 
+                  defaultText={texts.names ? texts.names.split('&')[1]?.trim() || '' : ''} 
                   className="text-7xl font-sans font-black mb-12 w-full text-left leading-none tracking-tighter" 
                   style={{ fontFamily: fontFamily, color: themeColors.primaryText }} 
                 />
