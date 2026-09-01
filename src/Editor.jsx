@@ -3,7 +3,7 @@ import * as htmlToImage from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import { motion, useDragControls } from 'framer-motion';
 import { processSVGTemplate } from './svgUtils';
-import { generateHarmonies } from './colorUtils';
+import { generateHarmonies, hexToHSL } from './colorUtils';
 
 // Componente de texto arrastrable e interactivo (Ahora con Animaciones)
 const DraggableText = ({ tag: Tag = 'div', className, defaultText, style, constraintsRef, delay = 0 }) => {
@@ -47,8 +47,46 @@ const DraggableText = ({ tag: Tag = 'div', className, defaultText, style, constr
 };
 
 // Componente de Gráfico/Foto arrastrable (Auto-Layout + Animaciones)
-const DraggableSVG = ({ id, svgType, color, className, constraintsRef, onDelete, src, delay = 0 }) => {
+const DraggableSVG = ({ id, svgType, color: propColor, bgColor, isEmbossed, className, constraintsRef, onDelete, src, delay = 0 }) => {
   const controls = useDragControls();
+  const [rotation, setRotation] = useState(0);
+  const [isRotating, setIsRotating] = useState(false);
+  const elementRef = useRef(null);
+
+  const startRotation = (e) => {
+    e.stopPropagation();
+    if (!elementRef.current) return;
+    
+    setIsRotating(true);
+    const rect = elementRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const onPointerMove = (moveEvent) => {
+      const dx = moveEvent.clientX - centerX;
+      const dy = moveEvent.clientY - centerY;
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      setRotation(angle + 90);
+    };
+
+    const onPointerUp = () => {
+      setIsRotating(false);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+  };
+
+  const color = (isEmbossed && bgColor) ? bgColor : propColor;
+  const isLight = (isEmbossed && bgColor) ? hexToHSL(bgColor).l > 50 : true;
+
+  const embossFilter = isEmbossed 
+    ? (isLight 
+        ? 'drop-shadow(-2px -2px 3px rgba(255,255,255,0.7)) drop-shadow(3px 3px 4px rgba(0,0,0,0.15))' 
+        : 'drop-shadow(-2px -2px 3px rgba(255,255,255,0.1)) drop-shadow(3px 3px 4px rgba(0,0,0,0.6))')
+    : 'none';
 
   const renderSVG = () => {
     switch (svgType) {
@@ -186,6 +224,13 @@ const DraggableSVG = ({ id, svgType, color, className, constraintsRef, onDelete,
             <path d="M 30 55 Q 20 65, 30 75 Q 40 65, 30 55 Z" fill={color} opacity="0.5"/>
           </svg>
         );
+      case 'corazones':
+        return (
+          <svg className="w-full h-full pointer-events-none" viewBox="0 0 100 100" fill="none" stroke={color} strokeWidth="3">
+            <path d="M 40 30 C 40 30, 30 10, 15 20 C 0 30, 10 50, 40 80 C 70 50, 80 30, 65 20 C 50 10, 40 30, 40 30 Z" />
+            <path d="M 60 40 C 60 40, 50 20, 35 30 C 20 40, 30 60, 60 90 C 90 60, 100 40, 85 30 C 70 20, 60 40, 60 40 Z" />
+          </svg>
+        );
       case 'esquina_orquidea':
         return (
           <svg className="w-full h-full pointer-events-none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -219,16 +264,24 @@ const DraggableSVG = ({ id, svgType, color, className, constraintsRef, onDelete,
 
   return (
     <motion.div 
+      ref={elementRef}
       drag 
       dragConstraints={constraintsRef}
       dragControls={controls}
       dragListener={false}
       dragMomentum={false}
       initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8, delay: delay, ease: "backOut" }}
+      animate={{ opacity: 1, scale: 1, rotate: rotation }}
+      transition={{ duration: 0.8, delay: delay, ease: "backOut", rotate: { duration: 0 } }}
       className={`group absolute z-30 hover:z-50 ${className}`}
     >
+      {/* Indicador de Grados */}
+      <div 
+        className={`absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900/90 backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-lg pointer-events-none whitespace-nowrap z-50 transition-all duration-200 ${isRotating ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2'}`}
+      >
+        {Math.round(rotation)}°
+      </div>
+
       <div className="absolute -left-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 flex flex-col gap-1 transition-opacity z-50 pointer-events-auto">
         <div 
           className="cursor-move text-gray-500 p-1.5 bg-white/90 rounded border border-gray-200 shadow-sm backdrop-blur hover:text-gray-800"
@@ -245,7 +298,18 @@ const DraggableSVG = ({ id, svgType, color, className, constraintsRef, onDelete,
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
         </button>
       </div>
-      {renderSVG()}
+
+      {/* Control de rotación (Drag to rotate) */}
+      <div 
+        className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-auto cursor-grab active:cursor-grabbing text-indigo-500 bg-white/90 p-1.5 rounded-full border border-gray-200 shadow-sm backdrop-blur"
+        onPointerDown={startRotation}
+        title="Arrastrar para Rotar"
+      >
+        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+      </div>
+      <div style={{ filter: embossFilter, width: '100%', height: '100%' }}>
+        {renderSVG()}
+      </div>
     </motion.div>
   );
 };
@@ -282,10 +346,12 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
     avantGardeLabel: "LA BODA DE"
   });
 
+  const [activeEmbossEffect, setActiveEmbossEffect] = useState(null);
+
   const [themeColors, setThemeColors] = useState({
     background: '#FDFBF7',
     primaryText: '#22543D',
-    secondaryText: '#4A5568',
+    secondaryText: '#13274F',
     tertiary: '#E2E8F0',
     accent: '#D49A89'
   });
@@ -296,7 +362,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
     setActiveSmartPalette(palette.colores);
     setThemeColors({
       background: palette.colores[0],
-      secondaryText: palette.colores[1],
+      secondaryText: '#13274F', // Forced to dark blue for legibility
       tertiary: palette.colores[2],
       accent: palette.colores[3],
       primaryText: palette.colores[4]
@@ -308,7 +374,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
     const shuffled = [...activeSmartPalette].sort(() => Math.random() - 0.5);
     setThemeColors({
       background: shuffled[0],
-      secondaryText: shuffled[1],
+      secondaryText: '#13274F', // Forced to dark blue for legibility
       tertiary: shuffled[2],
       accent: shuffled[3],
       primaryText: shuffled[4]
@@ -404,7 +470,7 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
   };
 
   // Motor de Composición Inteligente
-  const handleAddElement = (type, imageUrl = null) => {
+  const handleAddElement = (type, imageUrl = null, isEmbossed = false) => {
     const currentCount = addedElements.length;
     let smartClasses = "";
     
@@ -427,12 +493,8 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
       smartClasses = `top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${isPhoto ? widthClass : 'w-24'} ${isPhoto ? heightClass : 'h-24'}`;
     }
 
-    setAddedElements([...addedElements, {
-      id: Date.now(),
-      type: type,
-      classes: smartClasses,
-      src: imageUrl
-    }]);
+    const newEl = { id: Date.now(), type, classes: smartClasses, src: imageUrl, isEmbossed };
+    setAddedElements([...addedElements, newEl]);
   };
 
   const handleDeleteElement = (idToRemove) => {
@@ -839,6 +901,57 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                   <option value="'Montserrat', sans-serif">Moderna (Montserrat)</option>
                   <option value="'Courier New', monospace">Minimalista (Courier)</option>
                 </select>
+              </div>
+
+              {/* EFECTOS DE PAPEL PREMIUM (3D) */}
+              <div className="flex flex-col bg-gray-50 p-3 rounded-xl border border-gray-100 mt-2">
+                <span className="text-[10px] uppercase text-gray-500 font-bold mb-2">Efectos de Papel Premium (3D)</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {/* Anillos */}
+                  <button 
+                    onClick={() => {
+                      setActiveEmbossEffect('anillos');
+                      handleAddElement('anillos', null, true);
+                    }}
+                    className={`rounded-xl p-2 flex flex-col items-center justify-center gap-1 border-2 transition-all shadow-sm ${activeEmbossEffect === 'anillos' ? 'border-teal-400 bg-teal-50' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                  >
+                    <svg className={`w-8 h-8 transition-colors ${activeEmbossEffect === 'anillos' ? 'text-teal-500' : 'text-gray-200'}`} viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="4" style={{ filter: 'drop-shadow(-1px -1px 2px rgba(255,255,255,0.9)) drop-shadow(2px 2px 3px rgba(0,0,0,0.15))' }}>
+                      <circle cx="40" cy="50" r="20"/>
+                      <circle cx="60" cy="50" r="20"/>
+                    </svg>
+                    <span className="text-[9px] uppercase font-bold text-gray-600 mt-1">Anillos</span>
+                  </button>
+
+                  {/* Flores */}
+                  <button 
+                    onClick={() => {
+                      setActiveEmbossEffect('flores');
+                      handleAddElement('flores', null, true);
+                    }}
+                    className={`rounded-xl p-2 flex flex-col items-center justify-center gap-1 border-2 transition-all shadow-sm ${activeEmbossEffect === 'flores' ? 'border-teal-400 bg-teal-50' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                  >
+                    <svg className={`w-8 h-8 transition-colors ${activeEmbossEffect === 'flores' ? 'text-teal-500' : 'text-gray-200'}`} viewBox="0 0 100 100" fill="currentColor" style={{ filter: 'drop-shadow(-1px -1px 2px rgba(255,255,255,0.9)) drop-shadow(2px 2px 3px rgba(0,0,0,0.15))' }}>
+                      <path d="M50 20 C60 10, 80 20, 70 40 C60 60, 40 60, 30 40 C20 20, 40 10, 50 20 Z" opacity="0.6"/>
+                      <path d="M50 20 C40 10, 20 20, 30 40 C40 60, 60 60, 70 40 C80 20, 60 10, 50 20 Z" opacity="0.5"/>
+                    </svg>
+                    <span className="text-[9px] uppercase font-bold text-gray-600 mt-1">Flores</span>
+                  </button>
+
+                  {/* Corazones */}
+                  <button 
+                    onClick={() => {
+                      setActiveEmbossEffect('corazones');
+                      handleAddElement('corazones', null, true);
+                    }}
+                    className={`rounded-xl p-2 flex flex-col items-center justify-center gap-1 border-2 transition-all shadow-sm ${activeEmbossEffect === 'corazones' ? 'border-teal-400 bg-teal-50' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                  >
+                    <svg className={`w-8 h-8 transition-colors ${activeEmbossEffect === 'corazones' ? 'text-teal-500' : 'text-gray-200'}`} viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="4" style={{ filter: 'drop-shadow(-1px -1px 2px rgba(255,255,255,0.9)) drop-shadow(2px 2px 3px rgba(0,0,0,0.15))' }}>
+                      <path d="M 40 30 C 40 30, 30 10, 15 20 C 0 30, 10 50, 40 80 C 70 50, 80 30, 65 20 C 50 10, 40 30, 40 30 Z" />
+                      <path d="M 60 40 C 60 40, 50 20, 35 30 C 20 40, 30 60, 60 90 C 90 60, 100 40, 85 30 C 70 20, 60 40, 60 40 Z" />
+                    </svg>
+                    <span className="text-[9px] uppercase font-bold text-gray-600 mt-1">Corazones</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
