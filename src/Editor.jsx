@@ -989,9 +989,10 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
             </div>
 
             <div onClick={() => { setActiveTemplate('avant-garde'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'avant-garde' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
-              <div className="bg-gray-100 h-20 p-2 flex flex-col items-start justify-center relative">
-                 <span className="font-sans font-black text-lg leading-none tracking-tighter" style={{ color: themeColors.primaryText }}>AVANT</span>
-                 <span className="font-sans font-black text-lg leading-none tracking-tighter" style={{ color: themeColors.primaryText }}>GARDE</span>
+              <div className="bg-gray-100 h-20 p-2 flex flex-col items-start justify-center relative overflow-hidden pl-3">
+                 <div className="absolute top-0 bottom-0 left-0 w-2" style={{ backgroundColor: themeColors.accent }}></div>
+                 <span className="font-sans font-bold text-xs uppercase" style={{ color: themeColors.primaryText }}>Avant</span>
+                 <span className="font-sans font-light text-[9px] uppercase tracking-widest" style={{ color: themeColors.secondaryText }}>Garde</span>
               </div>
             </div>
 
@@ -999,6 +1000,54 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
               <div className="bg-gray-800 h-20 p-2 flex flex-col items-center justify-center relative">
                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
                  <span className="font-sans font-light text-white text-[10px] uppercase relative z-10" style={{ textShadow: `0 2px 4px ${themeColors.primaryText}` }}>Fotográfico</span>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('romantico'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'romantico' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-rose-50/50 h-20 p-2 flex flex-col items-center justify-center relative">
+                 <span className="font-serif italic text-lg" style={{ color: themeColors.primaryText }}>Romántico</span>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('ticket'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'ticket' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-white h-20 p-2 flex flex-col items-start justify-center relative border-dashed border-2 border-gray-200 m-1">
+                 <span className="font-mono font-bold text-[10px] uppercase" style={{ color: themeColors.primaryText }}>Boarding Pass</span>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('art-deco'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'art-deco' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-gray-900 h-20 p-2 flex flex-col items-center justify-center relative">
+                 <div className="absolute inset-1 border border-yellow-500/50"></div>
+                 <span className="font-sans font-bold tracking-widest text-[10px] text-yellow-500 uppercase">Art Deco</span>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('newspaper'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'newspaper' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-[#f0ece1] h-20 p-2 flex flex-col items-center justify-center relative">
+                 <div className="w-full h-px bg-gray-800 mb-1"></div>
+                 <span className="font-serif font-bold text-xs text-gray-800">The Times</span>
+                 <div className="w-full h-px bg-gray-800 mt-1"></div>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('movie'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'movie' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-black h-20 p-2 flex flex-col items-center justify-center relative">
+                 <span className="font-sans font-black text-white text-xs tracking-widest uppercase">Cine</span>
+                 <span className="font-sans font-light text-gray-400 text-[6px] tracking-widest uppercase mt-1">A Love Story</span>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('crest'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'crest' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-white h-20 p-2 flex flex-col items-center justify-center relative">
+                 <div className="w-6 h-6 rounded-full border border-gray-300 mb-1 flex items-center justify-center"><span className="text-[8px] font-serif">S</span></div>
+                 <span className="font-serif text-[10px] text-gray-600">Emblema</span>
+              </div>
+            </div>
+
+            <div onClick={() => { setActiveTemplate('watercolor'); setAddedElements([]); }} className={`cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${activeTemplate === 'watercolor' ? 'border-rose-400 shadow-md' : 'border-transparent hover:border-gray-200 shadow-sm'}`}>
+              <div className="bg-white h-20 p-2 flex flex-col items-center justify-center relative overflow-hidden">
+                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/50 to-pink-100/50 blur-md"></div>
+                 <span className="font-serif italic text-sm relative z-10 text-gray-700">Acuarela</span>
               </div>
             </div>
 
@@ -1181,7 +1230,97 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
             </motion.div>
           )}
 
-          {/* 3. FOTOGRÁFICO */}
+          {/* 3. BOHO ARCO */}
+          {activeTemplate === 'boho' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-6 flex flex-col items-center text-center bg-orange-50/10"
+            >
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}
+                className="absolute inset-4 rounded-t-full border-2 pointer-events-none z-10 flex flex-col items-center pt-8"
+                style={{ borderColor: themeColors.accent, backgroundColor: `${themeColors.tertiary}40` }}
+              >
+                <svg className="w-12 h-12 mb-4" viewBox="0 0 100 100" fill="none" stroke={themeColors.accent} strokeWidth="1" opacity="0.6">
+                  <path d="M 50 20 C 50 20, 30 40, 50 60 C 70 40, 50 20, 50 20 Z" />
+                </svg>
+              </motion.div>
+              
+              <div className="flex-1 flex flex-col items-center justify-center w-full z-20 px-8 py-16">
+                <DraggableText delay={0.2} constraintsRef={canvasRef} tag="p" defaultText={texts.bohoIntro} className="text-[10px] tracking-widest uppercase mb-8 font-sans w-full" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText 
+                  delay={0.4}
+                  constraintsRef={canvasRef}
+                  tag="h1" 
+                  defaultText={texts.names} 
+                  className="text-5xl mb-6 font-serif leading-tight w-full" 
+                  style={{ 
+                    fontFamily: fontFamily,
+                    color: themeColors.primaryText
+                  }} 
+                />
+                
+                <DraggableText delay={0.6} constraintsRef={canvasRef} tag="p" defaultText="NOS CASAMOS" className="text-xs tracking-[0.3em] font-sans opacity-70 w-full mb-8" style={{ color: themeColors.secondaryText }} />
+                
+                <div className="w-full flex items-center justify-center gap-4 mb-8">
+                  <div className="flex-1 h-px bg-gradient-to-r from-transparent to-current opacity-30" style={{ color: themeColors.accent }}></div>
+                  <DraggableText delay={0.7} constraintsRef={canvasRef} tag="p" defaultText={texts.date} className="text-sm tracking-widest font-sans whitespace-nowrap" style={{ color: themeColors.primaryText }} />
+                  <div className="flex-1 h-px bg-gradient-to-l from-transparent to-current opacity-30" style={{ color: themeColors.accent }}></div>
+                </div>
+                
+                <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-sm font-sans mb-1 w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText={texts.city} className="text-xs font-sans w-full opacity-80" style={{ color: themeColors.secondaryText }} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 4. IMPERIAL (CLASSIC) */}
+          {activeTemplate === 'classic' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-8 flex flex-col items-center text-center"
+            >
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }}
+                className="absolute inset-4 border border-solid pointer-events-none z-10" 
+                style={{ borderColor: themeColors.accent }}
+              ></motion.div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.3 }}
+                className="absolute inset-5 border-[0.5px] border-solid pointer-events-none z-10" 
+                style={{ borderColor: themeColors.primaryText, opacity: 0.3 }}
+              ></motion.div>
+              
+              <div className="flex-1 flex flex-col items-center justify-center w-full z-20 gap-4 mt-2">
+                <DraggableText delay={0.2} constraintsRef={canvasRef} tag="div" defaultText={texts.classicInitials} className="text-2xl font-serif mb-4 w-full" style={{ color: themeColors.accent, fontFamily: fontFamily }} />
+                
+                <DraggableText delay={0.3} constraintsRef={canvasRef} tag="p" defaultText={texts.avantGardeLabel} className="text-[9px] tracking-[0.4em] uppercase mb-2 font-sans w-full" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText 
+                  delay={0.4}
+                  constraintsRef={canvasRef}
+                  tag="h1" 
+                  defaultText={texts.names} 
+                  className="text-4xl mb-4 font-serif w-full" 
+                  style={{ 
+                    fontFamily: fontFamily,
+                    color: themeColors.primaryText
+                  }} 
+                />
+                
+                <DraggableText delay={0.5} constraintsRef={canvasRef} tag="p" defaultText="TIENEN EL HONOR DE INVITARLE" className="text-[8px] tracking-[0.3em] font-sans opacity-70 w-full mb-6" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText delay={0.6} constraintsRef={canvasRef} tag="p" defaultText={texts.date} className="text-sm tracking-widest uppercase mb-1 font-sans w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.7} constraintsRef={canvasRef} tag="p" defaultText={texts.year} className="text-xs uppercase tracking-widest mb-6 font-sans w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+                
+                <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-sm font-serif w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText={texts.city} className="text-xs font-sans mt-1 w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 5. FOTOGRÁFICO */}
           {activeTemplate === 'photographic' && (
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
@@ -1231,6 +1370,292 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
             </motion.div>
           )}
 
+          {/* 6. AVANT-GARDE */}
+          {activeTemplate === 'avant-garde' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-8 flex flex-col text-left overflow-hidden bg-gray-50/50"
+            >
+              <motion.div 
+                initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.2 }}
+                className="absolute top-0 left-0 bottom-0 w-4 pointer-events-none z-10" 
+                style={{ backgroundColor: themeColors.accent }}
+              ></motion.div>
+              
+              <div className="flex-1 flex flex-col justify-center w-full z-20 pl-6">
+                <div className="mb-12">
+                  <DraggableText delay={0.2} constraintsRef={canvasRef} tag="h1" defaultText={texts.names ? texts.names.split('&')[0]?.trim() || '' : ''} className="text-6xl font-sans font-bold leading-none w-full" style={{ color: themeColors.primaryText, fontFamily: fontFamily }} />
+                  <DraggableText delay={0.3} constraintsRef={canvasRef} tag="span" defaultText="&" className="text-4xl font-serif italic my-2 w-full" style={{ color: themeColors.accent }} />
+                  <DraggableText delay={0.4} constraintsRef={canvasRef} tag="h1" defaultText={texts.names ? texts.names.split('&')[1]?.trim() || '' : ''} className="text-6xl font-sans font-bold leading-none w-full" style={{ color: themeColors.primaryText, fontFamily: fontFamily }} />
+                </div>
+                
+                <DraggableText delay={0.6} constraintsRef={canvasRef} tag="p" defaultText={texts.avantGardeLabel} className="text-[10px] tracking-[0.4em] uppercase mb-4 font-sans font-bold w-full" style={{ color: themeColors.secondaryText }} />
+                
+                <div className="h-px w-24 mb-6" style={{ backgroundColor: themeColors.primaryText, opacity: 0.3 }}></div>
+                
+                <DraggableText delay={0.7} constraintsRef={canvasRef} tag="p" defaultText={texts.date} className="text-sm tracking-widest font-sans font-bold mb-1 w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText={texts.year} className="text-xs uppercase tracking-widest mb-6 font-sans w-full" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-sm font-sans font-bold w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={1.0} constraintsRef={canvasRef} tag="p" defaultText={texts.city} className="text-xs font-sans mt-1 w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 7. ROMÁNTICO */}
+          {activeTemplate === 'romantico' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center bg-rose-50/30"
+            >
+              <div className="absolute inset-8 border border-solid rounded-3xl pointer-events-none z-10" style={{ borderColor: themeColors.accent, opacity: 0.3 }}></div>
+              <div className="flex-1 flex flex-col items-center justify-center w-full z-20 gap-4">
+                <DraggableText delay={0.2} constraintsRef={canvasRef} tag="p" defaultText="Nos Casamos" className="text-sm font-serif italic w-full" style={{ color: themeColors.secondaryText }} />
+                
+                <div className="relative w-full flex justify-center items-center my-10 h-24">
+                  <DraggableText delay={0.4} constraintsRef={canvasRef} tag="h1" defaultText={texts.names ? texts.names.split('&')[0]?.trim() || '' : ''} className="text-[3.5rem] font-serif absolute -translate-x-12 -translate-y-4" style={{ fontFamily: fontFamily, color: themeColors.primaryText }} />
+                  <DraggableText delay={0.5} constraintsRef={canvasRef} tag="span" defaultText="&" className="text-4xl font-serif italic opacity-60 z-0 absolute" style={{ color: themeColors.accent }} />
+                  <DraggableText delay={0.6} constraintsRef={canvasRef} tag="h1" defaultText={texts.names ? texts.names.split('&')[1]?.trim() || '' : ''} className="text-[3.5rem] font-serif absolute translate-x-12 translate-y-6" style={{ fontFamily: fontFamily, color: themeColors.primaryText }} />
+                </div>
+                
+                <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText={texts.date} className="text-sm uppercase tracking-widest font-sans w-full mt-8" style={{ color: themeColors.primaryText }} />
+                
+                <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-xs font-serif w-full mt-4" style={{ color: themeColors.secondaryText }} />
+                <DraggableText delay={1.0} constraintsRef={canvasRef} tag="p" defaultText={texts.city} className="text-[10px] font-sans uppercase tracking-widest mt-1 w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 8. TICKET (Boarding Pass) */}
+          {activeTemplate === 'ticket' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-6 flex flex-col items-center justify-center text-left bg-gray-100"
+            >
+              <div className="w-full bg-white border-2 border-dashed rounded-xl p-6 relative shadow-sm h-full max-h-[500px] flex flex-col justify-center" style={{ borderColor: themeColors.accent }}>
+                <div className="absolute top-0 right-12 bottom-0 w-px border-r-2 border-dashed" style={{ borderColor: themeColors.accent, opacity: 0.5 }}></div>
+                
+                <DraggableText delay={0.2} constraintsRef={canvasRef} tag="p" defaultText="BOARDING PASS" className="text-[10px] tracking-[0.2em] font-mono font-bold w-full mb-8" style={{ color: themeColors.accent }} />
+                
+                <div className="flex flex-col gap-6 w-[80%]">
+                  <div>
+                    <DraggableText delay={0.3} constraintsRef={canvasRef} tag="p" defaultText="PASSENGER / INVITADO" className="text-[7px] uppercase font-sans text-gray-400 mb-1" />
+                    <DraggableText delay={0.4} constraintsRef={canvasRef} tag="h2" defaultText={texts.names} className="text-2xl font-bold font-sans uppercase leading-none" style={{ color: themeColors.primaryText }} />
+                  </div>
+                  
+                  <div className="flex gap-4">
+                    <div>
+                      <DraggableText delay={0.5} constraintsRef={canvasRef} tag="p" defaultText="DATE / FECHA" className="text-[7px] uppercase font-sans text-gray-400 mb-1" />
+                      <DraggableText delay={0.6} constraintsRef={canvasRef} tag="p" defaultText={texts.date} className="text-xs font-bold font-sans uppercase" style={{ color: themeColors.primaryText }} />
+                    </div>
+                    <div>
+                      <DraggableText delay={0.7} constraintsRef={canvasRef} tag="p" defaultText="TIME / HORA" className="text-[7px] uppercase font-sans text-gray-400 mb-1" />
+                      <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText={texts.minimalTime || "16:00 HRS"} className="text-xs font-bold font-sans uppercase" style={{ color: themeColors.primaryText }} />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText="DESTINATION / LUGAR" className="text-[7px] uppercase font-sans text-gray-400 mb-1" />
+                    <DraggableText delay={1.0} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-sm font-bold font-sans uppercase leading-tight" style={{ color: themeColors.primaryText }} />
+                    <DraggableText delay={1.1} constraintsRef={canvasRef} tag="p" defaultText={texts.city} className="text-[9px] font-sans uppercase text-gray-500 mt-1" />
+                  </div>
+                </div>
+                
+                {/* Barcode mock */}
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-60">
+                  {[...Array(12)].map((_, i) => (
+                    <div key={i} className="bg-gray-800 h-8" style={{ width: Math.random() > 0.5 ? '2px' : '4px' }}></div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* 9. ART DECO */}
+          {activeTemplate === 'art-deco' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center bg-gray-900"
+            >
+              <div className="absolute inset-6 border-2 border-solid pointer-events-none z-10" style={{ borderColor: themeColors.accent }}></div>
+              <div className="absolute inset-8 border border-solid pointer-events-none z-10" style={{ borderColor: themeColors.accent, opacity: 0.5 }}></div>
+              
+              <div className="flex-1 flex flex-col items-center justify-center w-full z-20 gap-4 mt-8">
+                <DraggableText delay={0.2} constraintsRef={canvasRef} tag="p" defaultText="JOIN US TO CELEBRATE" className="text-[8px] tracking-[0.5em] font-sans w-full text-yellow-500 uppercase" />
+                
+                <DraggableText 
+                  delay={0.4}
+                  constraintsRef={canvasRef}
+                  tag="h1" 
+                  defaultText={texts.names} 
+                  className="text-4xl my-6 font-sans font-black tracking-widest uppercase w-full text-yellow-500" 
+                  style={{ fontFamily: fontFamily }} 
+                />
+                
+                <div className="flex items-center justify-center w-full gap-4 mb-4">
+                  <div className="h-px bg-yellow-500 flex-1 opacity-50"></div>
+                  <DraggableText delay={0.6} constraintsRef={canvasRef} tag="p" defaultText={texts.date} className="text-sm font-sans font-bold tracking-widest text-white uppercase" />
+                  <div className="h-px bg-yellow-500 flex-1 opacity-50"></div>
+                </div>
+                
+                <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-sm font-sans tracking-widest uppercase w-full mt-4 text-white" />
+                <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText={texts.city} className="text-[9px] font-sans tracking-widest uppercase mt-2 w-full text-yellow-500/80" />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 10. NEWSPAPER (The Wedding Times) */}
+          {activeTemplate === 'newspaper' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-6 flex flex-col items-center text-center bg-[#f4f1ea]"
+            >
+              <div className="w-full flex flex-col items-center z-20 mt-4">
+                <DraggableText delay={0.1} constraintsRef={canvasRef} tag="p" defaultText="VOL. 1 • SPECIAL EDITION" className="text-[8px] tracking-widest font-sans uppercase w-full text-gray-500 mb-2" />
+                <div className="w-full h-1 bg-gray-800 mb-1"></div>
+                <div className="w-full h-px bg-gray-800 mb-4"></div>
+                
+                <DraggableText delay={0.3} constraintsRef={canvasRef} tag="h1" defaultText="THE WEDDING TIMES" className="text-3xl font-serif font-black w-full text-gray-900 tracking-tighter" />
+                
+                <div className="w-full h-px bg-gray-800 mt-4 mb-1"></div>
+                <div className="w-full flex justify-between px-2 mb-8">
+                  <DraggableText delay={0.4} constraintsRef={canvasRef} tag="span" defaultText={texts.city} className="text-[8px] font-sans uppercase text-gray-600" />
+                  <DraggableText delay={0.5} constraintsRef={canvasRef} tag="span" defaultText={texts.date} className="text-[8px] font-sans uppercase text-gray-600" />
+                </div>
+                
+                <DraggableText delay={0.6} constraintsRef={canvasRef} tag="h2" defaultText="¡NOS CASAMOS!" className="text-2xl font-serif font-bold italic w-full text-gray-900 mb-6" />
+                
+                <DraggableText 
+                  delay={0.7}
+                  constraintsRef={canvasRef}
+                  tag="h3" 
+                  defaultText={texts.names} 
+                  className="text-4xl font-serif leading-none w-full text-gray-900 mb-8" 
+                  style={{ fontFamily: fontFamily }} 
+                />
+                
+                <div className="w-full text-left px-4 border-l-2 border-gray-300">
+                  <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText="LA CELEBRACIÓN TENDRÁ LUGAR EN:" className="text-[7px] tracking-widest font-sans uppercase text-gray-500 mb-1" />
+                  <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-sm font-serif font-bold text-gray-900" />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* 11. CINE (Movie Poster) */}
+          {activeTemplate === 'movie' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-8 flex flex-col items-center justify-end text-center bg-black overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/30 z-10 pointer-events-none"></div>
+              
+              <div className="relative z-20 w-full flex flex-col items-center mb-8">
+                <DraggableText delay={0.2} constraintsRef={canvasRef} tag="p" defaultText="A ROMANTIC PRODUCTION" className="text-[7px] tracking-[0.5em] font-sans uppercase w-full text-gray-400 mb-6" />
+                
+                <DraggableText 
+                  delay={0.4}
+                  constraintsRef={canvasRef}
+                  tag="h1" 
+                  defaultText={texts.names ? texts.names.replace(' & ', '\n') : ''} 
+                  className="text-5xl font-sans font-black uppercase leading-tight w-full text-white tracking-widest" 
+                  style={{ fontFamily: fontFamily }} 
+                />
+                
+                <div className="w-full flex justify-center my-8">
+                  <div className="flex gap-4 items-center">
+                    <DraggableText delay={0.5} constraintsRef={canvasRef} tag="span" defaultText="STARRING" className="text-[6px] tracking-widest font-sans uppercase text-gray-500" />
+                    <DraggableText delay={0.6} constraintsRef={canvasRef} tag="span" defaultText={texts.names} className="text-[9px] tracking-widest font-sans uppercase text-white" />
+                  </div>
+                </div>
+                
+                <div className="w-full border-t border-b border-gray-800 py-2 flex justify-between px-4 mb-8">
+                  <div className="flex flex-col items-center">
+                    <DraggableText delay={0.7} constraintsRef={canvasRef} tag="span" defaultText="RELEASE DATE" className="text-[5px] tracking-widest font-sans uppercase text-gray-500" />
+                    <DraggableText delay={0.8} constraintsRef={canvasRef} tag="span" defaultText={texts.date} className="text-[8px] tracking-widest font-sans uppercase text-white mt-1" />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <DraggableText delay={0.9} constraintsRef={canvasRef} tag="span" defaultText="LOCATION" className="text-[5px] tracking-widest font-sans uppercase text-gray-500" />
+                    <DraggableText delay={1.0} constraintsRef={canvasRef} tag="span" defaultText={texts.location} className="text-[8px] tracking-widest font-sans uppercase text-white mt-1" />
+                  </div>
+                </div>
+                
+                <DraggableText delay={1.1} constraintsRef={canvasRef} tag="p" defaultText="BASED ON A TRUE LOVE STORY" className="text-[6px] tracking-[0.4em] font-sans uppercase w-full text-gray-500" />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 12. SELLO / EMBLEMA (Crest) */}
+          {activeTemplate === 'crest' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-8 flex flex-col items-center text-center bg-white"
+            >
+              <div className="flex-1 flex flex-col items-center w-full z-20 mt-12 gap-6">
+                <motion.div 
+                  initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}
+                  className="w-20 h-20 rounded-full border border-solid flex items-center justify-center mb-8 relative"
+                  style={{ borderColor: themeColors.accent }}
+                >
+                  <div className="absolute inset-1 rounded-full border border-dashed" style={{ borderColor: themeColors.accent, opacity: 0.5 }}></div>
+                  <DraggableText constraintsRef={canvasRef} tag="span" defaultText={texts.names ? texts.names.charAt(0) + ' & ' + (texts.names.split('&')[1]?.trim().charAt(0) || '') : 'A&B'} className="text-2xl font-serif" style={{ color: themeColors.accent }} />
+                </motion.div>
+                
+                <DraggableText delay={0.4} constraintsRef={canvasRef} tag="p" defaultText="CON GRAN ALEGRÍA" className="text-[9px] tracking-[0.3em] font-sans uppercase w-full" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText 
+                  delay={0.5}
+                  constraintsRef={canvasRef}
+                  tag="h1" 
+                  defaultText={texts.names} 
+                  className="text-4xl font-serif w-full mb-4" 
+                  style={{ fontFamily: fontFamily, color: themeColors.primaryText }} 
+                />
+                
+                <div className="w-12 h-px mb-8" style={{ backgroundColor: themeColors.accent, opacity: 0.5 }}></div>
+                
+                <DraggableText delay={0.6} constraintsRef={canvasRef} tag="p" defaultText={texts.date} className="text-xs uppercase font-sans font-bold tracking-widest w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.7} constraintsRef={canvasRef} tag="p" defaultText={texts.minimalTime || "A LAS 18:00 HORAS"} className="text-[10px] font-sans mt-2 w-full" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-sm font-serif w-full mt-10" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText={texts.city} className="text-xs font-sans mt-1 w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* 13. ACUARELA (Watercolor) */}
+          {activeTemplate === 'watercolor' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center bg-[#faf9f7] overflow-hidden"
+            >
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 2 }}
+                className="absolute w-[150%] h-[150%] blur-3xl rounded-full opacity-30 pointer-events-none z-0"
+                style={{ background: `radial-gradient(circle, ${themeColors.accent} 0%, transparent 60%)` }}
+              ></motion.div>
+              
+              <div className="flex-1 flex flex-col items-center justify-center w-full z-20 gap-3 relative">
+                <DraggableText delay={0.2} constraintsRef={canvasRef} tag="p" defaultText="Celebra con nosotros" className="text-lg font-serif italic w-full mb-4" style={{ color: themeColors.secondaryText }} />
+                
+                <DraggableText 
+                  delay={0.4}
+                  constraintsRef={canvasRef}
+                  tag="h1" 
+                  defaultText={texts.names} 
+                  className="text-6xl font-serif w-full mb-8" 
+                  style={{ fontFamily: fontFamily, color: themeColors.primaryText }} 
+                />
+                
+                <DraggableText delay={0.6} constraintsRef={canvasRef} tag="p" defaultText={texts.date} className="text-sm tracking-widest font-sans w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.7} constraintsRef={canvasRef} tag="p" defaultText={texts.year} className="text-xs uppercase font-sans w-full mb-8" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+                
+                <DraggableText delay={0.8} constraintsRef={canvasRef} tag="p" defaultText={texts.location} className="text-sm font-sans w-full" style={{ color: themeColors.primaryText }} />
+                <DraggableText delay={0.9} constraintsRef={canvasRef} tag="p" defaultText={texts.city} className="text-xs font-sans mt-1 w-full" style={{ color: themeColors.secondaryText, opacity: 0.8 }} />
+              </div>
+            </motion.div>
+          )}
+
           {/* PLANTILLA CUSTOM DE CANVA (SVG) */}
           {activeTemplate.startsWith('custom-') && (
             <motion.div 
@@ -1257,8 +1682,8 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
             </motion.div>
           )}
 
-          {/* 4. BOHO - Arco */}
-          {activeTemplate === 'boho' && (
+          {/* 4. BOHO - Arco (Eliminado por duplicado) */}
+          {false && (
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
               className="absolute inset-0 flex flex-col items-center text-center pt-16 overflow-hidden"
@@ -1294,8 +1719,8 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
             </motion.div>
           )}
 
-          {/* 5. CLÁSICA - Imperial */}
-          {activeTemplate === 'classic' && (
+          {/* 5. CLÁSICA - Imperial (Eliminado por duplicado) */}
+          {false && (
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
               className="absolute inset-0 p-8 flex flex-col items-center text-center"
@@ -1334,8 +1759,8 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
             </motion.div>
           )}
 
-          {/* 6. AVANT-GARDE - Tipográfico */}
-          {activeTemplate === 'avant-garde' && (
+          {/* 6. AVANT-GARDE - Tipográfico (Eliminado por duplicado) */}
+          {false && (
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
               className="absolute inset-0 p-10 flex flex-col items-start justify-center text-left"
