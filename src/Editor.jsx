@@ -115,6 +115,47 @@ const DraggableSVG = ({ id, svgType, color, className, constraintsRef, onDelete,
             <path d="M90 50 C100 40, 80 30, 70 50 C80 70, 100 60, 90 50 Z" fill={color} opacity="0.8"/>
           </svg>
         );
+      case 'mandala':
+        return (
+          <svg className="w-full h-full pointer-events-none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g stroke={color} fill="none" strokeWidth="1.5">
+              <circle cx="50" cy="50" r="15" />
+              <circle cx="50" cy="50" r="30" strokeDasharray="2 4" />
+              <path d="M50 20 L55 35 L70 35 L60 45 L65 60 L50 50 L35 60 L40 45 L30 35 L45 35 Z" fill={color} opacity="0.4" stroke="none" />
+              <path d="M50 5 L55 20 L50 25 L45 20 Z" />
+              <path d="M50 95 L55 80 L50 75 L45 80 Z" />
+              <path d="M5 50 L20 45 L25 50 L20 55 Z" />
+              <path d="M95 50 L80 45 L75 50 L80 55 Z" />
+              <circle cx="50" cy="50" r="45" opacity="0.3" strokeWidth="1" />
+            </g>
+          </svg>
+        );
+      case 'guirnalda':
+        return (
+          <svg className="w-full h-full pointer-events-none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 50 Q 30 20, 50 50 T 90 50" fill="none" stroke={color} strokeWidth="1.5" />
+            <path d="M20 40 Q 25 35, 30 40 Q 25 45, 20 40" fill={color} opacity="0.7" />
+            <path d="M40 35 Q 45 30, 50 35 Q 45 40, 40 35" fill={color} opacity="0.7" />
+            <path d="M60 40 Q 65 45, 70 40 Q 65 35, 60 40" fill={color} opacity="0.7" />
+            <path d="M80 45 Q 85 50, 90 45 Q 85 40, 80 45" fill={color} opacity="0.7" />
+            <circle cx="25" cy="45" r="2" fill={color} />
+            <circle cx="45" cy="40" r="2" fill={color} />
+            <circle cx="65" cy="35" r="2" fill={color} />
+            <circle cx="85" cy="50" r="2" fill={color} />
+          </svg>
+        );
+      case 'esquina_floral':
+        return (
+          <svg className="w-full h-full pointer-events-none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 10 L 90 10 M 10 10 L 10 90" fill="none" stroke={color} strokeWidth="2" opacity="0.7" />
+            <path d="M 10 10 Q 30 10, 40 30 Q 10 30, 10 10" fill={color} opacity="0.5" />
+            <path d="M 10 10 Q 10 30, 30 40 Q 30 10, 10 10" fill={color} opacity="0.5" />
+            <path d="M 25 25 C 35 15, 55 15, 45 35 C 35 45, 15 35, 25 25" fill={color} opacity="0.8" />
+            <circle cx="30" cy="30" r="3" fill="#fff" opacity="0.8" />
+            <path d="M 45 10 Q 60 20, 70 10" fill="none" stroke={color} strokeWidth="1" />
+            <path d="M 10 45 Q 20 60, 10 70" fill="none" stroke={color} strokeWidth="1" />
+          </svg>
+        );
       // FASE 2: MÁSCARAS FOTOGRÁFICAS
       case 'foto-arco':
         return (
@@ -567,6 +608,28 @@ const Editor = ({ customTemplates = [], setCustomTemplates }) => {
                 <path d="M50 90 C60 100, 70 80, 50 70 C30 80, 40 100, 50 90 Z"/>
               </svg>
               <span className="text-[9px] uppercase font-bold text-gray-500">Corona</span>
+            </button>
+            <button onClick={() => handleAddElement('mandala')} className="bg-gray-50 border border-gray-100 hover:border-rose-300 hover:bg-rose-50 rounded-xl p-2 flex flex-col items-center justify-center transition-all group shadow-sm">
+              <svg className="w-6 h-6 text-gray-400 group-hover:text-rose-400 mb-1" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <circle cx="50" cy="50" r="30" strokeDasharray="2 4"/>
+                <path d="M50 20 L55 35 L70 35 L60 45 L65 60 L50 50 L35 60 L40 45 L30 35 L45 35 Z" fill="currentColor" opacity="0.4" stroke="none" />
+                <path d="M50 5 L55 20 L50 25 L45 20 Z" />
+              </svg>
+              <span className="text-[9px] uppercase font-bold text-gray-500">Mandala</span>
+            </button>
+            <button onClick={() => handleAddElement('guirnalda')} className="bg-gray-50 border border-gray-100 hover:border-rose-300 hover:bg-rose-50 rounded-xl p-2 flex flex-col items-center justify-center transition-all group shadow-sm">
+              <svg className="w-6 h-6 text-gray-400 group-hover:text-rose-400 mb-1" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <path d="M10 50 Q 30 20, 50 50 T 90 50" strokeWidth="2" />
+                <path d="M20 40 Q 25 35, 30 40 Q 25 45, 20 40" fill="currentColor" opacity="0.7" stroke="none"/>
+              </svg>
+              <span className="text-[9px] uppercase font-bold text-gray-500">Guirnalda</span>
+            </button>
+            <button onClick={() => handleAddElement('esquina_floral')} className="bg-gray-50 border border-gray-100 hover:border-rose-300 hover:bg-rose-50 rounded-xl p-2 flex flex-col items-center justify-center transition-all group shadow-sm">
+              <svg className="w-6 h-6 text-gray-400 group-hover:text-rose-400 mb-1" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <path d="M10 10 L 90 10 M 10 10 L 10 90" strokeWidth="3" />
+                <path d="M 25 25 C 35 15, 55 15, 45 35 C 35 45, 15 35, 25 25" fill="currentColor" stroke="none"/>
+              </svg>
+              <span className="text-[9px] uppercase font-bold text-gray-500">Esquina</span>
             </button>
           </div>
 
